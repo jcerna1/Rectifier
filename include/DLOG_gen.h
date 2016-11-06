@@ -1,15 +1,6 @@
 /****************************************************************
 * FILENAME:     DLOG_gen.h             
 * DESCRIPTION:  struct and func declarations for data logger module  
-* AUTHOR:       Mitja Nemec
-* START DATE:   16.1.2009
-* VERSION:      1.1
-*
-* CHANGES : 
-* VERSION   DATE        WHO         DETAIL 
-* 1.0       16.1.2009   Mitja Nemec Initial version
-* 1.1       23.2.2010   Mitja Nemec Added various trigger modes
-*
 ****************************************************************/
 #ifndef     __DLOG_GEN_H__
 #define     __DLOG_GEN_H__

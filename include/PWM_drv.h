@@ -1,16 +1,6 @@
 /************************************************************** 
 * FILE:         PWM_drv.c
 * DESCRIPTION:  PWM driver for TMS320F28069
-* AUTHOR:       Andraž Kontarèek
-* START DATE:   21.12.2009
-* VERSION:      1.1
-*
-* CHANGES : 
-* VERSION   DATE        WHO                 DETAIL 
-* 1.0       21.12.2009  Andraž Kontarèek    Initial version
-* 1.1       5.3.2010    Mitja Nemec         Changed to generic
-* 1.2       29.3.2012   Mitja Nemec         Decoupled ADC part into separate file
-*
 ****************************************************************/
 #ifndef     __PWM_DRV_H__
 #define     __PWM_DRV_H__
@@ -20,52 +10,51 @@
 #include    "define.h"
 #include    "globals.h"
 
-/* Definicije */
-// delovanje modula ob debug-dogodkih
-// (0-stop at zero, 1-stop immediately, 2-run free)
+/* Definitions */
+// peripherals on DEBUG_STOP:
+// 0 stop immediately, 1 stop when finished, 2 run free
 #define     PWM_DEBUG       DEBUG_STOP
 
-// perioda casovnika (v procesorskih cikilh) 
+// timer period (in CPU cycles)
 #define     PWM_PERIOD      (CPU_FREQ/(SAMPLE_FREQ * SAMP_PRESCALE))
 
-// prescaler za prekinitev
+// prescaler for interrupt
 #define     PWM_INT_PSCL    SAMP_PRESCALE
 
 /**************************************************************
-* Funkcija, poklièe funkciji PWM_PWM_init in PWM_ADC_init; klièemo
-* jo iz main-a
+* Function for calling functions PWM_PWM_init and PWM_ADC_init;
+* called from main()
 * return: void
 **************************************************************/
 extern void PWM_init(void);
 
 /**************************************************************
-* Funkcija, ki popiše registre za PWM1,. Znotraj funkcije
-* se omogoèi interrupt za proženje ADC, popiše se perioda, compare
-* register, omogoèi se izhode za PWM...
+* Function for registers PWM1, PWM2, PWM3. Inside function an interrupt for ADC is
+* enabled, period is set, compare register is set, tripzone register is set. PWM output
+* signals are enabled.
 * return:void
 **************************************************************/
 extern void PWM_update(float duty);
 
 /**************************************************************
-* Funkcija, ki starta PWM1. Znotraj funkcije nastavimo
-* naèin štetja èasovnikov (up-down-count mode)
+* Function for starting PWM1. Inside count mode can be set.
 * return: void
 **************************************************************/
 extern void PWM_start(void);
 
 /**************************************************************
-* Funkcija, ki nastavi periodo, za doseganje zeljene periode
-* in je natancna na cikel natancno
+* Function for setting period value in order to get desired period
+* value. Cycle accurate.
 * return: void
-* arg1: zelena perioda
+* arg1: desired period
 **************************************************************/
 extern void PWM_period(float perioda);
 
 /**************************************************************
-* Funkcija, ki nastavi periodo, za doseganje zeljene frekvence
-* in je natancna na cikel natancno
+* Function for setting period in order to get desired
+* frequency value. Cycle accurate.
 * return: void
-* arg1: zelena frekvenca
+* arg1: desired frequency
 **************************************************************/
 extern void PWM_frequency(float frekvenca);
 

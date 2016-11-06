@@ -1,14 +1,11 @@
 /**************************************************************
 * FILE:         ADC_drv.c
 * DESCRIPTION:  A/D driver for piccolo devices
-* AUTHOR:       Mitja Nemec
-* DATE:         19.1.2012
-*
 ****************************************************************/
 #include "ADC_drv.h"
 
 /**************************************************************
-* inicializiramo ADC
+* initialize ADC
 **************************************************************/
 void ADC_init(void)
 {
@@ -38,10 +35,10 @@ void ADC_init(void)
     EALLOW;
     AdcRegs.ADCCTL1.bit.ADCBGPWD = 1;       // Power ADC BG
     AdcRegs.ADCCTL1.bit.ADCREFPWD = 1;      // Power reference
-    AdcRegs.ADCCTL1.bit.ADCPWDN = 1;        // Power ADC - vklop analognega vezja znotraj procesorja
-    AdcRegs.ADCCTL1.bit.ADCENABLE = 1;      // Enable ADC - omogocimo delovanje adc-ja
-    AdcRegs.ADCCTL1.bit.ADCREFSEL = 0;      // Select interal BG - izberemo notranjo referenco
-    AdcRegs.ADCCTL1.bit.TEMPCONV = 1;       // izberemo notranji temperaturni senzor na adcin5 vhodu
+    AdcRegs.ADCCTL1.bit.ADCPWDN = 1;        // Power ADC - enable analogue circuit inside MCU
+    AdcRegs.ADCCTL1.bit.ADCENABLE = 1;      // Enable ADC
+    AdcRegs.ADCCTL1.bit.ADCREFSEL = 0;      // Select interal BG (internal reference)
+    AdcRegs.ADCCTL1.bit.TEMPCONV = 1;       // Internal temperature sensor on ADCIN5 input
     AdcRegs.ADCCTL1.bit.INTPULSEPOS = 1;
     EDIS;
 
@@ -52,10 +49,10 @@ void ADC_init(void)
     
     // ADC trigger setup
     ADC_MODUL1.CMPB = 0x0000;
-    ADC_MODUL1.ETSEL.bit.SOCASEL = ET_CTR_ZERO;   //sproži prekinitev na periodo
-    ADC_MODUL1.ETPS.bit.SOCAPRD = ET_1ST;        //ob vsakem prvem dogodku
-    ADC_MODUL1.ETCLR.bit.SOCA = 1;               //clear possible flag
-    ADC_MODUL1.ETSEL.bit.SOCAEN = 1;             //enable ADC Start Of conversion
+    ADC_MODUL1.ETSEL.bit.SOCASEL = ET_CTR_ZERO;   // trigger on period
+    ADC_MODUL1.ETPS.bit.SOCAPRD = ET_1ST;        // at each first case
+    ADC_MODUL1.ETCLR.bit.SOCA = 1;               // clear possible flag
+    ADC_MODUL1.ETSEL.bit.SOCAEN = 1;             // enable ADC Start Of conversion
 
     // SOC0 config
     AdcRegs.ADCSOC0CTL.bit.CHSEL = 0x6;     //set SOC0 channel select to ADCINA1
@@ -72,20 +69,19 @@ void ADC_init(void)
     AdcRegs.ADCSOC2CTL.bit.TRIGSEL = 0x05;  //set SOC2 to start trigger on EPWM1A
     AdcRegs.ADCSOC2CTL.bit.ACQPS = 0X015;
 
-    //tu povemo naj se postavi interrupt flag, ko je zadnja pretvorba koncna
-    //interrupt je se naprej onemogocen, flag ki se bo postavil pa nam bo
-    //sluzil za detektiranje konca niza pretvorb
-    AdcRegs.INTSEL1N2.bit.INT1SEL = 0x00;   //interrupt1 naj prozi signal EOC1, ker je to soc, ki se zadnji izvede
-    AdcRegs.INTSEL1N2.bit.INT1E = 1;        //prekinitev ob interrpt dogodku je omogocena (da se lahko postavi flag)
-    AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;   //pobrise se flag
+    // set interrupt flag when last coversion is finished ...
+    // while interrupt is still disabled, the interrupt flag will serve us
+    // to detect the end of coversion
+    AdcRegs.INTSEL1N2.bit.INT1SEL = 0x00;   // interrupt1 tiggers signal EOC1 (this one is the last to run)
+    AdcRegs.INTSEL1N2.bit.INT1E = 1;        // interrupt at interrupt event is disabled (so flag can be set)
+    AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;   // clear the flag
 
     EDIS;
 
 }   //end of AP_ADC_init
 
 /**************************************************************
-* Funkcija, ki pocaka da ADC konca s pretvorbo
-* vzorcimo...
+* This function is for waiting for ADC to finish conversion ...
 * return: void
 **************************************************************/
 void ADC_wait(void)
@@ -94,5 +90,5 @@ void ADC_wait(void)
     {
         /* DO NOTHING */
     }
-    AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;               //pobrisem flag bit od ADC-ja
+    AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;  // clear ADC flag bit
 }

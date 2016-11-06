@@ -1,26 +1,22 @@
 /************************************************************** 
 * FILE:         PWM_drv.c
 * DESCRIPTION:  A/D in PWM driver for TMS320F2808
-* AUTHOR:       Andraž Kontarèek, Mitja Nemec
-* DATE:         21.12.2009
-*
 ****************************************************************/
 #include "PWM_drv.h"
 
-// prototipi lokalnih funkcij
 
 
 /**************************************************************
-* Funkcija, ki popiše registre za PWM1,2 in 3. Znotraj funkcije
-* se omogoèi interrupt za proženje ADC, popiše se perioda, compare
-* register, tripzone register, omogoèi se izhode za PWM...
+* Function for registers PWM1, PWM2, PWM3. Inside function an interrupt for ADC is
+* enabled, period is set, compare register is set, tripzone register is set. PWM output
+* signals are enabled.
 * return:void
 **************************************************************/
 void PWM_init(void)
 {
 //EPWM Module 1
     // setup timer base 
-    EPwm1Regs.TBPRD = PWM_PERIOD/2;       //nastavljeno na 25us, PWM_PERIOD = 50us  
+    EPwm1Regs.TBPRD = PWM_PERIOD/2;       // set to 25us, PWM_PERIOD = 50us
     EPwm1Regs.TBCTL.bit.PHSDIR = 0;       // count up after sync
     EPwm1Regs.TBCTL.bit.CLKDIV = 0;
     EPwm1Regs.TBCTL.bit.HSPCLKDIV = 0;
@@ -56,15 +52,15 @@ void PWM_init(void)
 
     // Event trigger
     // Proženje ADC-ja
-    EPwm1Regs.ETSEL.bit.SOCASEL = 2;    //sproži prekinitev na periodo
-    EPwm1Regs.ETPS.bit.SOCAPRD = 1;     //ob vsakem prvem dogodku
-    EPwm1Regs.ETCLR.bit.SOCA = 1;       //clear possible flag
-    EPwm1Regs.ETSEL.bit.SOCAEN = 1;     //enable ADC Start Of conversion
+    EPwm1Regs.ETSEL.bit.SOCASEL = 2;    // trigger on period
+    EPwm1Regs.ETPS.bit.SOCAPRD = 1;     // at each first case
+    EPwm1Regs.ETCLR.bit.SOCA = 1;       // clear possible flag
+    EPwm1Regs.ETSEL.bit.SOCAEN = 1;     // enable ADC Start Of conversion
     // Proženje prekinitve 
-    EPwm1Regs.ETSEL.bit.INTSEL = 2;             //sproži prekinitev na periodo
-    EPwm1Regs.ETPS.bit.INTPRD = PWM_INT_PSCL;   //ob vsakem prvem dogodku
-    EPwm1Regs.ETCLR.bit.INT = 1;                //clear possible flag
-    EPwm1Regs.ETSEL.bit.INTEN = 1;              //enable interrupt
+    EPwm1Regs.ETSEL.bit.INTSEL = 2;             // trigger on period
+    EPwm1Regs.ETPS.bit.INTPRD = PWM_INT_PSCL;   // at each first case
+    EPwm1Regs.ETCLR.bit.INT = 1;                // clear possible flag
+    EPwm1Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
 
 //EPWM Module 2
 
@@ -75,92 +71,90 @@ void PWM_init(void)
 }   //end of PWM_PWM_init
 
 /**************************************************************
-* Funkcija, ki na podlagi vklopnega razmerja in izbranega vektorja
-* vklopi doloèene tranzistorje
+* Function for choosing correct transistor combination, depending
+* on duty cycle and chosen vector.
 * return: void
-* arg1: vklopno razmerje od 0.0 do 1.0 (format IQ)
+* arg1: duty cycle from 0.0 to 1.0 (format IQ)
 **************************************************************/
 void PWM_update(float duty)
 {
    int compare;
 
-    // zašèita za duty cycle 
-    //(zašèita za sektor je narejena v default switch case stavku)
+    // duty cycle protection
     if (duty < 0.0) duty = 0.0;
     if (duty > 1.0) duty = 1.0;
 
-    //izraèunam vrednost compare registra(iz periode in preklopnega razmerja)
+    // calculate value of compare register (from period and duty cycle)
     compare = (int)((PWM_PERIOD/2) * duty);
 
-    // vpisem vrednost v register
+    // write the value to register
     EPwm1Regs.CMPA.half.CMPA = compare;
     
 
 }  //end of AP_PWM_update
 
 /**************************************************************
-* Funkcija, ki nastavi periodo, za doseganje zeljene periode
-* in je natancna na cikel natancno
+* Function for setting period value in order to get desired period
+* value. Cycle accurate.
 * return: void
-* arg1: zelena perioda
+* arg1: desired period
 **************************************************************/
 void PWM_period(float perioda)
 {
-    // spremenljivke
+    // variables
     float   temp_tbper;
     static float ostanek = 0;
     long celi_del;
 
-    // naracunam TBPER (CPU_FREQ * perioda)
+    // calculate TBPER (CPU_FREQ * period)
     temp_tbper = perioda * CPU_FREQ/2;
     
-    // izlocim celi del in ostanek
+    // separate integer and remainder
     celi_del = (long)temp_tbper;
     ostanek = temp_tbper - celi_del;
-    // povecam celi del, ce je ostanek veji od 1
+    // increase integer, in case remainder is bigger than 1
     if (ostanek > 1.0)
     {
         ostanek = ostanek - 1.0;
         celi_del = celi_del + 1;
     }
     
-    // nastavim TBPER
+    // set TBPER
     EPwm1Regs.TBPRD = celi_del;
 }   //end of FB_period
 
 /**************************************************************
-* Funkcija, ki nastavi periodo, za doseganje zeljene frekvence
-* in je natancna na cikel natancno
+* Function for setting period in order to get desired
+* frequency value. Cycle accurate.
 * return: void
-* arg1: zelena frekvenca
+* arg1: desired frequency
 **************************************************************/
 void PWM_frequency(float frekvenca)
 {
-    // spremenljivke
+    // variables
     float   temp_tbper;
     static float ostanek = 0;
     long celi_del;
 
-    // naracunam TBPER (CPU_FREQ / SAMPLING_FREQ) - 1
+    // calculate TBPER (CPU_FREQ / SAMPLING_FREQ) - 1
     temp_tbper = (CPU_FREQ/2) / frekvenca;
 
-    // izlocim celi del in ostanek
+    // separate integer and remainder
     celi_del = (long)temp_tbper;
     ostanek = temp_tbper - celi_del;
-    // povecam celi del, ce je ostanek veji od 1
+    // increase integer, in case remainder is bigger than 1
     if (ostanek > 1.0)
     {
         ostanek = ostanek - 1.0;
         celi_del = celi_del + 1;
     }
     
-    // nastavim TBPER
+    // set TBPER
     EPwm1Regs.TBPRD = celi_del - 1;
 }   //end of FB_frequency
   
 /**************************************************************
-* Funkcija, ki starta PWM1. Znotraj funkcije nastavimo
-* naèin štetja èasovnikov (up-down-count mode)
+* Function for starting PWM1. Inside count mode can be set.
 * return: void
 **************************************************************/
 void PWM_start(void)

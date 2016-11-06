@@ -1,79 +1,76 @@
 /****************************************************************
  * FILENAME:     PER_int.c
  * DESCRIPTION:  periodic interrupt code
- * AUTHOR:       Mitja Nemec
- * DATE:         16.1.2009
- *
  ****************************************************************/
 #include    "PER_int.h"
 #include    "TIC_toc.h"
 #include	"math.h"
 
-// za izracun napetosti
+// voltage calculation
 long napetost_raw = 0;
 long napetost_offset = 2048;
 float napetost_gain = 0.015749432; // =100/10100*4096/3.3*(1+50/12)
 float napetost = 0.0;
 
-// za izracun toka
+// current calculation
 long tok_raw = 0;
 long tok_offset = 2048;
 float tok_gain = 0.0;
 float tok = 0.0;
 
-// za oceno obremenjenosti CPU-ja
+// CPU load evaluation
 float   cpu_load  = 0.0;
 long    interrupt_cycles = 0;
 
-// interni stevec za 50 Hz
+// internal 50 Hz counter
 float   grid_ctr = 0; // grid counter
 float   grid_prd = SAMPLE_FREQ/GRID_FREQ; // grid period: 400 = 20000/50
 
 
-// spremenljivka s katero štejemo kolikokrat se je prekinitev predolgo izvajala
+// interrupt overflow (timeout) counter
 int interrupt_overflow_counter = 0;
 
 /**************************************************************
-* spremenljivke, ki jih potrebujemo za sinhronizacijo
+* variables for synchronization
 **************************************************************/
 float   PLL_out = SAMPLE_FREQ; // PLL_out = 20000
-float	prejsnja_napetost = 0.0;     // spremenljivki za napetosti, ki ju bom potreboval
-float	trenutna_napetost = 0.0;     // za ugotavljanje faznega zamika
-float	fazni_zamik = 0.0; 	// fazni zamik: na zaèetku predpostavim, da je 0
-float 	trenutna_napaka = 0.0;	// trenutna napaka PI regulatorja
-float	prejsnja_napaka = 0.0;	// prejsnja napaka PI regulatorja
-float	P = 0.0;	// proporcionalni èlen regulatorja
-float	I = 0.0;	// integralni èlen regulatorja
-float	Kp = 50.0;	// koeficient proporcionalnega èlena regulatorja
-float	Ki = 5.0;	// koeficient integralnega èlena regulatorja
-float	reg_out = 0.0; // izhodna vrednost PI regulatorja
+float	prejsnja_napetost = 0.0;     // previous voltage
+float	trenutna_napetost = 0.0;     // current voltage
+float	fazni_zamik = 0.0; 	// phase shift (delay)
+float 	trenutna_napaka = 0.0;	// previous PI regulator error
+float	prejsnja_napaka = 0.0;	// current PI regulator error
+float	P = 0.0;	// proportional value of PI regulator
+float	I = 0.0;	// integral value of PI regulator
+float	Kp = 50.0;	// proportional coefficient
+float	Ki = 5.0;	// integral coefficient
+float	reg_out = 0.0; // PI regulator output
 
 /**************************************************************
- * Prekinitev, ki v kateri se izvaja regulacija
+ * Interrupt for regulation
  **************************************************************/
 #pragma CODE_SECTION(PER_int, "ramfuncs");
 void interrupt PER_int(void)
 {
-    /* lokalne spremenljivke */
-	int pozitivni_prehod = 0; // na zaèetku vsake prekinitve predvidevam, da ni pozitivnega prehoda èez nièlo
+    /* local variables */
+	int pozitivni_prehod = 0; // assuming there is no positive edge of the signal
 
-    // najprej povem da sem se odzzval na prekinitev
-    // Spustimo INT zastavico casovnika ePWM1
+    // acknowledge interrupt:
+    // Clear INT flag - ePWM1
     EPwm1Regs.ETCLR.bit.INT = 1;
-    // Spustimo INT zastavico v PIE enoti
+    // Clear INT flag- PIE
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
 
-    // pozenem stoprico
+    // start timer
     interrupt_cycles = TIC_time;
     TIC_start();
 
-    // izracunam obremenjenost procesorja
+    // calculate CPU load
     cpu_load = (float)interrupt_cycles / (CPU_FREQ/SWITCH_FREQ);
 
-    // pocakam da ADC konca s pretvorbo
+    // wait for the ADC to finish conversion
     ADC_wait();
 
-    // preracunam napetost
+    // calculate voltage and current
     napetost_raw = NAPETOST - napetost_offset;
     napetost = napetost_raw * napetost_gain;
 
@@ -81,95 +78,89 @@ void interrupt PER_int(void)
     tok = tok_raw * tok_gain;
 
     /*******************************************************
-    * Tukaj pride sinhronizacija - tukaj je potrebno doloèit frekvenco PWMja
+    * PWM frequency calculation (synchronization)
     *******************************************************/
-    prejsnja_napetost = trenutna_napetost; //trenutna napetost bom v naslednjem ciklu potreboval kot prejšnjo napetost, zato si jo shranim
-    trenutna_napetost = napetost; //napetost, ki sem jo ravnokar dobil preko ADC, shranim kot trenutno
+    prejsnja_napetost = trenutna_napetost; // save current voltage as previous, for the next cycle
+    trenutna_napetost = napetost; // save current voltage in new variable
     
-    if ((prejsnja_napetost<=0)&&(trenutna_napetost>=0)) { //èe je prejšnja napetost manjša ali enaka 0 ter je hkrati trenutna napetost veèja ali enaka 0, potem imamo pozitivni prehod skozi 0
+    if ((prejsnja_napetost<=0)&&(trenutna_napetost>=0)) { // detect positive edge of the signal
     	pozitivni_prehod = 1;
-    	fazni_zamik = ((grid_ctr-200)*PI)/200; //izraèunam fazni zamik, rezultat je v rangu od -PI do +PI
+    	fazni_zamik = ((grid_ctr-200)*PI)/200; // calculate phase shift (range -PI .. PI)
     }
 
-    if (pozitivni_prehod) { //èe sem zaznal pozitivni prehod in izraèunal nov fazni zamik, grem v regulacijo
-    	prejsnja_napaka = trenutna_napaka;  //shranim prejšnjo napako
-    	trenutna_napaka = 0 - fazni_zamik;	//izraèunam trenutno napako
+    if (pozitivni_prehod) { // in case of positive edge, start regulation
+    	prejsnja_napaka = trenutna_napaka;  // save previous error
+    	trenutna_napaka = 0 - fazni_zamik;	// calculate previous error
 
-    	// PI regulacija
-    	P  = trenutna_napaka;   //proporcionalni èlen: trenutna napaka
-    	I += prejsnja_napaka;  //integralni èlen: vsota prejšnjih napak
-    	reg_out = Kp*P + Ki*I; //izraèunam nov izhod PI regulatorja
-    	if (reg_out<-4000) reg_out = -4000; //spodnja omejitev izhoda
-    	if (reg_out>4000) reg_out = 4000;	//zgornja omejitev izhoda
+    	// PI regulation
+    	P  = trenutna_napaka;   // proportional value: current error
+    	I += prejsnja_napaka;  // integral value: sum of previous errors
+    	reg_out = Kp*P + Ki*I; // calculate new PI regulator output
+    	if (reg_out<-4000) reg_out = -4000; // lower limit of the output
+    	if (reg_out>4000) reg_out = 4000;	// upper limit of the output
     }
 
-    //izraèunam novo frekvenco: osnovni frekvenci 20000Hz prištejem (pozitiven ali negativen) izhod iz regulatorja
+    // calculate new frequency: base frequency of 20000Hz + (positive or negative) regulator output
     PLL_out = SAMPLE_FREQ+reg_out;
     
-    // nastavim frekvenco
-    PWM_frequency(PLL_out); //PLL_out je zeljena frekvenca PWM-ja v hertzih
+    // set the new frequency (Hz)
+    PWM_frequency(PLL_out);
 
     
-    // interni stevec, ki gre od 0 do 400
+    // internal counter from 0 to 400
     grid_ctr = grid_ctr + 1;
     if (grid_ctr >= grid_prd)
     {
-        grid_ctr = 0; // ce pridemo do konca stevca, ga ponastavimo nazaj na 0
+        grid_ctr = 0; // reset counter if 400
     }
-    // generiram 50 Hz signal na izhodu
+    // generate 50 Hz signal on the output
     if (grid_ctr >= (grid_prd/2))
     {
-        PCB_out_on(); // ce je stevec manjsi od 200
+        PCB_out_on(); // if counter lower than 200
     }
     else
     {
-        PCB_out_off(); // ce je stevec vecji od 200
+        PCB_out_off(); // if counter higher than 200
     }
 
-    // spavim vrednosti v buffer za prikaz
+    // save values in buffer
     DLOG_GEN_update();
 
-    /* preverim, èe me sluèajno èaka nova prekinitev.
-       èe je temu tako, potem je nekaj hudo narobe
-       saj je èas izvajanja prekinitve predolg
-       vse skupaj se mora zgoditi najmanj 10krat,
-       da reèemo da je to res problem
+    /* check for interrupt while this interrupt is running -
+     * if true, there is something wrong - if we count 10 such
+     * occurances, something is seriousely wrong!
      */
     if (EPwm1Regs.ETFLG.bit.INT == TRUE)
     {
-        // povecam stevec, ki steje take dogodke
+        // increase error counter
         interrupt_overflow_counter = interrupt_overflow_counter + 1;
 
-        // in ce se je vse skupaj zgodilo 10 krat se ustavim
-        // v kolikor uC krmili kakšen resen HW, potem moèno
-        // proporoèam lepše "hendlanje" takega dogodka
-        // beri:ugasni moènostno stopnjo, ...
+        // if counter reaches 10, stop the operation
         if (interrupt_overflow_counter >= 10)
         {
             asm(" ESTOP0");
         }
     }
 
-    // stopam
+    // stop timer
     TIC_stop();
 
 }   // end of PWM_int
 
 /**************************************************************
- * Funckija, ki pripravi vse potrebno za izvajanje
- * prekinitvene rutine
+ * Function for interrupt initialization
  **************************************************************/
 void PER_int_setup(void)
 {
 
-    // Proženje prekinitve 
-    EPwm1Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;    //sproži prekinitev na periodo
-    EPwm1Regs.ETPS.bit.INTPRD = ET_1ST;         //ob vsakem prvem dogodku
-    EPwm1Regs.ETCLR.bit.INT = 1;                //clear possible flag
-    EPwm1Regs.ETSEL.bit.INTEN = 1;              //enable interrupt
+    // Interrupt triggering
+    EPwm1Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;    // trigger on period
+    EPwm1Regs.ETPS.bit.INTPRD = ET_1ST;         // at each first case
+    EPwm1Regs.ETCLR.bit.INT = 1;                // clear possible flag
+    EPwm1Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
 
-    // inicializiram data logger
-    dlog.trig_value = 0;    // specify trigger value
+    // Data logger initialization
+    dlog.trig_value = 0;    			   // specify trigger value
     dlog.slope = Positive;                 // trigger on positive slope
     dlog.prescalar = 1;                    // store every  sample
     dlog.mode = Normal;                    // Normal trigger mode
@@ -181,14 +172,13 @@ void PER_int_setup(void)
     dlog.iptr2 = &tok;
 
 
-    // registriram prekinitveno rutino
+    // acknowledge interrupt
     EALLOW;
     PieVectTable.EPWM1_INT = &PER_int;
     EDIS;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
     PieCtrlRegs.PIEIER3.bit.INTx1 = 1;
     IER |= M_INT3;
-    // da mi prekinitev teèe  tudi v real time naèinu
-    // (za razhoršèevanje main zanke in BACK_loop zanke)
+    // interrupt in real time (for main loop and BACK_loop debugging)
     SetDBGIER(M_INT3);
 }

@@ -1,13 +1,11 @@
 /**************************************************************
 * FILE:         PCB_util.c 
 * DESCRIPTION:  PCB initialization & Support Functions
-* VERSION:      1.0
-* AUTHOR:       Mitja Nemec
 **************************************************************/
 #include "PCB_util.h"
 
 /**************************************************************
-* Funckija ki prizge LED diodo 1
+* LED 1 turn ON
 **************************************************************/
 void PCB_LED_on(void)
 {
@@ -15,7 +13,7 @@ void PCB_LED_on(void)
 }
 
 /**************************************************************
-* Funckija ki ugasne LED diodo 1
+* LED 1 turn OFF
 **************************************************************/
 void PCB_LED_off(void)
 {
@@ -23,7 +21,7 @@ void PCB_LED_off(void)
 }
 
 /**************************************************************
-* Funckija ki spremeni stanje LED diode
+* LED 1 toggle
 **************************************************************/
 void PCB_LED_toggle(void)
 {
@@ -32,7 +30,7 @@ void PCB_LED_toggle(void)
 
 
 /**************************************************************
-* Funckija ki vklopi izhod
+* OUTPUT ON
 **************************************************************/
 void PCB_out_on(void)
 {
@@ -40,7 +38,7 @@ void PCB_out_on(void)
 }
 
 /**************************************************************
-* Funckija ki izklopi izhod
+* OUTPUT OFF
 **************************************************************/
 void PCB_out_off(void)
 {
@@ -48,19 +46,19 @@ void PCB_out_off(void)
 }
 
 /**************************************************************
-* Funckija ki inicializira PCB
+* PCB initialization
 **************************************************************/
 void PCB_init(void)
 {
     EALLOW;
 
-    /* IZHODI */
-    // LED na sticku
+    /* OUTPUTS */
+    // LED on Piccolo Board
     GpioCtrlRegs.GPBMUX1.bit.GPIO34 = 0;
     GpioCtrlRegs.GPBDIR.bit.GPIO34 = 1;
     GpioDataRegs.GPBDAT.bit.GPIO34 = 0;
 
-    // BREME
+    // consumer
     GpioCtrlRegs.GPAMUX1.bit.GPIO0 = 0;
     GpioCtrlRegs.GPADIR.bit.GPIO0 = 1;
     GpioDataRegs.GPADAT.bit.GPIO0 = 0;
