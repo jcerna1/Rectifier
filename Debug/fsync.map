@@ -1,10 +1,10 @@
 ******************************************************************************
              TMS320C2000 Linker PC v15.12.1                    
 ******************************************************************************
->> Linked Sun Nov 06 16:31:10 2016
+>> Linked Sun Nov 06 21:28:30 2016
 
 OUTPUT FILE NAME:   <fsync.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 000107d3
+ENTRY POINT SYMBOL: "_c_int00"  address: 000109f7
 
 
 MEMORY CONFIGURATION
@@ -19,7 +19,7 @@ PAGE 0:
   P_L1                  00008800   00000400  00000000  00000400  RWIX
   P_L2                  00008c00   00000400  00000000  00000400  RWIX
   P_L3                  00009000   00001000  00000000  00001000  RWIX
-  P_L78                 00010000   00004000  00000b1b  000034e5  RWIX
+  P_L78                 00010000   00004000  00000d2c  000032d4  RWIX
   P_OTP                 003d7800   000003fa  00000000  000003fa  RWIX
   P_FH                  003d8000   00004000  00000000  00004000  RWIX
   P_FG                  003dc000   00004000  00000000  00004000  RWIX
@@ -122,44 +122,45 @@ codestart
 *          0    00000000    00000002     
                   00000000    00000002     F2806x_CodeStartBranch.obj (codestart)
 
-.text      0    00010000    00000948     
+.text      0    00010000    00000b59     
                   00010000    000003dd     F2806x_DefaultIsr.obj (.text:retain)
                   000103dd    00000188     F2806x_SysCtrl.obj (.text)
-                  00010565    000000d1     PWM_drv.obj (.text)
-                  00010636    000000a5     DLOG_gen.obj (.text)
-                  000106db    00000088     rts2800_fpu32.lib : fs_div.obj (.text)
-                  00010763    00000070     ADC_drv.obj (.text)
-                  000107d3    00000046     rts2800_fpu32.lib : boot.obj (.text)
-                  00010819    00000036     PER_int.obj (.text)
-                  0001084f    00000031     PCB_util.obj (.text)
-                  00010880    00000028     F2806x_PieCtrl.obj (.text)
-                  000108a8    00000026     F2806x_PieVect.obj (.text)
-                  000108ce    00000019     rts2800_fpu32.lib : args_main.obj (.text)
-                  000108e7    00000019                       : exit.obj (.text)
-                  00010900    00000018     main.obj (.text)
-                  00010918    00000015     F2806x_Gpio.obj (.text)
-                  0001092d    00000009     rts2800_fpu32.lib : _lock.obj (.text)
-                  00010936    00000008     F2806x_CodeStartBranch.obj (.text)
-                  0001093e    00000007     F2806x_DisInt.obj (.text)
-                  00010945    00000003     F2806x_DBGIER.obj (.text)
+                  00010565    00000143     TEST_GPIO.obj (.text)
+                  000106a8    000000e1     GPIO.obj (.text)
+                  00010789    000000d1     PWM_drv.obj (.text)
+                  0001085a    000000a5     DLOG_gen.obj (.text)
+                  000108ff    00000088     rts2800_fpu32.lib : fs_div.obj (.text)
+                  00010987    00000070     ADC_drv.obj (.text)
+                  000109f7    00000046     rts2800_fpu32.lib : boot.obj (.text)
+                  00010a3d    00000036     PER_int.obj (.text)
+                  00010a73    00000031     PCB_util.obj (.text)
+                  00010aa4    00000028     F2806x_PieCtrl.obj (.text)
+                  00010acc    00000026     F2806x_PieVect.obj (.text)
+                  00010af2    0000001a     main.obj (.text)
+                  00010b0c    00000019     rts2800_fpu32.lib : args_main.obj (.text)
+                  00010b25    00000019                       : exit.obj (.text)
+                  00010b3e    00000009                       : _lock.obj (.text)
+                  00010b47    00000008     F2806x_CodeStartBranch.obj (.text)
+                  00010b4f    00000007     F2806x_DisInt.obj (.text)
+                  00010b56    00000003     F2806x_DBGIER.obj (.text)
 
 IQmath     0    00010000    00000000     UNINITIALIZED
 
-ramfuncs   0    00010948    00000117     
-                  00010948    00000111     PER_int.obj (ramfuncs:retain)
-                  00010a59    00000004     F2806x_usDelay.obj (ramfuncs)
-                  00010a5d    00000002     BACK_loop.obj (ramfuncs)
+ramfuncs   0    00010b59    00000117     
+                  00010b59    00000111     PER_int.obj (ramfuncs:retain)
+                  00010c6a    00000004     F2806x_usDelay.obj (ramfuncs)
+                  00010c6e    00000002     BACK_loop.obj (ramfuncs)
 
-.cinit     0    00010a5f    000000ba     
-                  00010a5f    0000007c     PER_int.obj (.cinit)
-                  00010adb    0000001e     DLOG_gen.obj (.cinit)
-                  00010af9    0000000a     PWM_drv.obj (.cinit)
-                  00010b03    0000000a     rts2800_fpu32.lib : _lock.obj (.cinit)
-                  00010b0d    0000000a                       : exit.obj (.cinit)
-                  00010b17    00000002     --HOLE-- [fill = 0]
+.cinit     0    00010c70    000000ba     
+                  00010c70    0000007c     PER_int.obj (.cinit)
+                  00010cec    0000001e     DLOG_gen.obj (.cinit)
+                  00010d0a    0000000a     PWM_drv.obj (.cinit)
+                  00010d14    0000000a     rts2800_fpu32.lib : _lock.obj (.cinit)
+                  00010d1e    0000000a                       : exit.obj (.cinit)
+                  00010d28    00000002     --HOLE-- [fill = 0]
 
-.reset     0    00010b1a    00000002     
-                  00010b1a    00000002     rts2800_fpu32.lib : boot.obj (.reset)
+.reset     0    00010d2a    00000002     
+                  00010d2a    00000002     rts2800_fpu32.lib : boot.obj (.reset)
 
 csm_rsvd   0    003f7f80    00000076     NOLOAD SECTION
                   003f7f80    00000076     F2806x_CSMPasswords.obj (csm_rsvd)
@@ -422,13 +423,15 @@ MODULE SUMMARY
     .\source\
        DLOG_gen.obj                    165    0         4190   
        PER_int.obj                     327    0         174    
+       TEST_GPIO.obj                   323    0         0      
+       GPIO.obj                        225    0         0      
        PWM_drv.obj                     209    0         14     
        ADC_drv.obj                     112    0         0      
        PCB_util.obj                    49     0         0      
-       main.obj                        24     0         0      
+       main.obj                        26     0         0      
        BACK_loop.obj                   2      0         0      
     +--+-------------------------------+------+---------+---------+
-       Total:                          888    0         4378   
+       Total:                          1438   0         4378   
                                                                
     .\source\device\
        F2806x_GlobalVariableDefs.obj   0      0         3507   
@@ -437,13 +440,12 @@ MODULE SUMMARY
        F2806x_PieVect.obj              38     0         256    
        F2806x_CSMPasswords.obj         0      0         126    
        F2806x_PieCtrl.obj              40     0         0      
-       F2806x_Gpio.obj                 21     0         0      
        F2806x_CodeStartBranch.obj      10     0         0      
        F2806x_DisInt.obj               7      0         0      
        F2806x_usDelay.obj              4      0         0      
        F2806x_DBGIER.obj               3      0         0      
     +--+-------------------------------+------+---------+---------+
-       Total:                          1504   0         3889   
+       Total:                          1483   0         3889   
                                                                
     ../lib/rts2800_fpu32.lib
        fs_div.obj                      136    0         0      
@@ -456,7 +458,7 @@ MODULE SUMMARY
                                                                
        Stack:                          0      0         768    
     +--+-------------------------------+------+---------+---------+
-       Grand Total:                    2657   0         9065   
+       Grand Total:                    3186   0         9065   
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -612,8 +614,8 @@ page  address   name
 ----  -------   ----                       
 1     0000a000  .bss                       
 0     00010000  .text                      
-0     000108e7  C$$EXIT                    
-0     000106db  FS$$DIV                    
+0     00010b25  C$$EXIT                    
+0     000108ff  FS$$DIV                    
 0     000100e8  _ADCINT1_ISR               
 0     000100f2  _ADCINT2_ISR               
 0     000102fa  _ADCINT3_ISR               
@@ -623,11 +625,11 @@ page  address   name
 0     00010322  _ADCINT7_ISR               
 0     0001032c  _ADCINT8_ISR               
 0     00010110  _ADCINT9_ISR               
-0     00010763  _ADC_init                  
-0     000107cc  _ADC_wait                  
+0     00010987  _ADC_init                  
+0     000109f0  _ADC_wait                  
 1     00007100  _AdcRegs                   
 1     00000b00  _AdcResult                 
-0     00010a5d  _BACK_loop                 
+0     00010c6e  _BACK_loop                 
 0     00010336  _CLA1_INT1_ISR             
 0     00010340  _CLA1_INT2_ISR             
 0     0001034a  _CLA1_INT3_ISR             
@@ -653,14 +655,14 @@ page  address   name
 0     0001028c  _DINTCH4_ISR               
 0     00010296  _DINTCH5_ISR               
 0     000102a0  _DINTCH6_ISR               
-0     00010636  _DLOG_GEN_update           
+0     0001085a  _DLOG_GEN_update           
 1     0000ac40  _DLOG_b_1                  
 1     0000a440  _DLOG_b_2                  
 1     0000a040  _DLOG_b_3                  
 1     0000a840  _DLOG_b_4                  
-0     0001093e  _DSP28x_DisableInt         
-0     00010942  _DSP28x_RestoreInt         
-0     00010a59  _DSP28x_usDelay            
+0     00010b4f  _DSP28x_DisableInt         
+0     00010b53  _DSP28x_RestoreInt         
+0     00010c6a  _DSP28x_usDelay            
 1     00000880  _DevEmuRegs                
 0     00010401  _DisableDog                
 1     00001000  _DmaRegs                   
@@ -709,11 +711,14 @@ page  address   name
 1     00006b40  _EQep2Regs                 
 1     00000d01  _EmuBMode                  
 1     00000d00  _EmuKey                    
-0     0001089f  _EnableInterrupts          
+0     00010ac3  _EnableInterrupts          
 0     0001054f  _ExtOscSel                 
 1     00000a80  _FlashRegs                 
 1     00000d04  _Flash_CPUScaleFactor      
 1     00000d02  _Flash_CallbackPtr         
+0     000106b0  _GPIO_Init                 
+0     00010773  _GPIO_u8GetSW1             
+0     0001077e  _GPIO_u8GetSW2             
 1     00006f80  _GpioCtrlRegs              
 1     00006fc0  _GpioDataRegs              
 1     00006fe0  _GpioIntRegs               
@@ -735,10 +740,9 @@ page  address   name
 0     00010000  _IQfuncsLoadEnd            
 0     00010000  _IQfuncsLoadStart          
 0     00010000  _IQfuncsRunStart           
-0     00010918  _InitGpio                  
 0     0001048c  _InitPeripheralClocks      
-0     00010880  _InitPieCtrl               
-0     000108a8  _InitPieVectTable          
+0     00010aa4  _InitPieCtrl               
+0     00010acc  _InitPieVectTable          
 0     00010409  _InitPll                   
 0     0001045e  _InitPll2                  
 0     000103dd  _InitSysCtrl               
@@ -754,29 +758,29 @@ page  address   name
 0     00010050  _NMI_ISR                   
 1     00007060  _NmiIntruptRegs            
 1     0000b05c  _P                         
-0     00010854  _PCB_LED_off               
-0     0001084f  _PCB_LED_on                
-0     00010859  _PCB_LED_toggle            
-0     00010868  _PCB_init                  
-0     00010863  _PCB_out_off               
-0     0001085e  _PCB_out_on                
-0     00010948  _PER_int                   
-0     00010819  _PER_int_setup             
+0     00010a78  _PCB_LED_off               
+0     00010a73  _PCB_LED_on                
+0     00010a7d  _PCB_LED_toggle            
+0     00010a8c  _PCB_init                  
+0     00010a87  _PCB_out_off               
+0     00010a82  _PCB_out_on                
+0     00010b59  _PER_int                   
+0     00010a3d  _PER_int_setup             
 0     000103bd  _PIE_RESERVED              
 1     0000b042  _PLL_out                   
-0     000105f5  _PWM_frequency             
-0     00010565  _PWM_init                  
-0     000105c3  _PWM_period                
-0     00010624  _PWM_start                 
-0     000105a2  _PWM_update                
+0     00010819  _PWM_frequency             
+0     00010789  _PWM_init                  
+0     000107e7  _PWM_period                
+0     00010848  _PWM_start                 
+0     000107c6  _PWM_update                
 1     003d7e80  _PartIdRegs                
 1     00000ce0  _PieCtrlRegs               
 1     00000d00  _PieVectTable              
 1     0000b07e  _PieVectTableInit          
 0     00010030  _RTOSINT_ISR               
-0     00010a5f  _RamfuncsLoadEnd           
-0     00010948  _RamfuncsLoadStart         
-0     00010948  _RamfuncsRunStart          
+0     00010c70  _RamfuncsLoadEnd           
+0     00010b59  _RamfuncsLoadStart         
+0     00010b59  _RamfuncsRunStart          
 0     000102be  _SCIRXINTA_ISR             
 0     000102d2  _SCIRXINTB_ISR             
 0     000102c8  _SCITXINTA_ISR             
@@ -788,11 +792,24 @@ page  address   name
 1     00007050  _SciaRegs                  
 1     00007750  _ScibRegs                  
 0     000103f7  _ServiceDog                
-0     00010945  _SetDBGIER                 
+0     00010b56  _SetDBGIER                 
 1     00007040  _SpiaRegs                  
 1     00007740  _SpibRegs                  
 1     00007010  _SysCtrlRegs               
 1     00000985  _SysPwrCtrlRegs            
+0     0001057d  _TEST_AllGPIOs             
+0     0001067b  _TEST_BRIDGE               
+0     00010622  _TEST_LED_G                
+0     0001060c  _TEST_LED_R                
+0     00010638  _TEST_LED_Y                
+0     000105d0  _TEST_PH_H1                
+0     000105e4  _TEST_PH_H2                
+0     000105f8  _TEST_PH_H3                
+0     00010594  _TEST_PH_L1                
+0     000105a8  _TEST_PH_L2                
+0     000105bc  _TEST_PH_L3                
+0     0001064e  _TEST_SW1                  
+0     00010666  _TEST_SW2                  
 1     0000b066  _TIC_time                  
 0     0001011a  _TINT0_ISR                 
 0     00010228  _USB0_INT_ISR              
@@ -824,31 +841,31 @@ abs   ffffffff  ___TI_prof_data_start
 abs   ffffffff  ___binit__                 
 1     0000a000  ___bss__                   
 abs   ffffffff  ___c_args__                
-0     00010a5f  ___cinit__                 
+0     00010c70  ___cinit__                 
 1     0000a000  ___end__                   
-0     00010948  ___etext__                 
+0     00010b59  ___etext__                 
 abs   ffffffff  ___pinit__                 
 0     00010000  ___text__                  
-0     000108ce  __args_main                
+0     00010b0c  __args_main                
 1     0000b07a  __cleanup_ptr              
 1     0000b07c  __dtors_ptr                
 1     0000b078  __lock                     
-0     00010935  __nop                      
-0     00010931  __register_lock            
-0     0001092d  __register_unlock          
+0     00010b46  __nop                      
+0     00010b42  __register_lock            
+0     00010b3e  __register_unlock          
 1     00000050  __stack                    
 1     0000b076  __unlock                   
-0     000108e7  _abort                     
-0     000107d3  _c_int00                   
+0     00010b25  _abort                     
+0     000109f7  _c_int00                   
 1     0000b044  _cpu_load                  
 1     0000a000  _dlog                      
-0     000108e9  _exit                      
+0     00010b27  _exit                      
 1     0000b05a  _fazni_zamik               
 1     0000b048  _grid_ctr                  
 1     0000b04e  _grid_prd                  
 1     0000b04a  _interrupt_cycles          
 1     0000b040  _interrupt_overflow_counter
-0     00010900  _main                      
+0     00010af2  _main                      
 1     0000b060  _napetost                  
 1     0000b05e  _napetost_gain             
 1     0000b064  _napetost_offset           
@@ -866,10 +883,10 @@ abs   ffffffff  ___pinit__
 1     0000b058  _trenutna_napaka           
 1     0000b046  _trenutna_napetost         
 abs   ffffffff  binit                      
-0     00010a5f  cinit                      
+0     00010c70  cinit                      
 0     00000000  code_start                 
 1     0000a000  end                        
-0     00010948  etext                      
+0     00010b59  etext                      
 abs   ffffffff  pinit                      
 
 
@@ -986,48 +1003,63 @@ page  address   name
 0     00010527  _IntOsc2Sel                
 0     0001053b  _XtalOscSel                
 0     0001054f  _ExtOscSel                 
-0     00010565  _PWM_init                  
-0     000105a2  _PWM_update                
-0     000105c3  _PWM_period                
-0     000105f5  _PWM_frequency             
-0     00010624  _PWM_start                 
-0     00010636  _DLOG_GEN_update           
-0     000106db  FS$$DIV                    
-0     00010763  _ADC_init                  
-0     000107cc  _ADC_wait                  
-0     000107d3  _c_int00                   
-0     00010819  _PER_int_setup             
-0     0001084f  _PCB_LED_on                
-0     00010854  _PCB_LED_off               
-0     00010859  _PCB_LED_toggle            
-0     0001085e  _PCB_out_on                
-0     00010863  _PCB_out_off               
-0     00010868  _PCB_init                  
-0     00010880  _InitPieCtrl               
-0     0001089f  _EnableInterrupts          
-0     000108a8  _InitPieVectTable          
-0     000108ce  __args_main                
-0     000108e7  C$$EXIT                    
-0     000108e7  _abort                     
-0     000108e9  _exit                      
-0     00010900  _main                      
-0     00010918  _InitGpio                  
-0     0001092d  __register_unlock          
-0     00010931  __register_lock            
-0     00010935  __nop                      
-0     0001093e  _DSP28x_DisableInt         
-0     00010942  _DSP28x_RestoreInt         
-0     00010945  _SetDBGIER                 
-0     00010948  _PER_int                   
-0     00010948  _RamfuncsLoadStart         
-0     00010948  _RamfuncsRunStart          
-0     00010948  ___etext__                 
-0     00010948  etext                      
-0     00010a59  _DSP28x_usDelay            
-0     00010a5d  _BACK_loop                 
-0     00010a5f  _RamfuncsLoadEnd           
-0     00010a5f  ___cinit__                 
-0     00010a5f  cinit                      
+0     0001057d  _TEST_AllGPIOs             
+0     00010594  _TEST_PH_L1                
+0     000105a8  _TEST_PH_L2                
+0     000105bc  _TEST_PH_L3                
+0     000105d0  _TEST_PH_H1                
+0     000105e4  _TEST_PH_H2                
+0     000105f8  _TEST_PH_H3                
+0     0001060c  _TEST_LED_R                
+0     00010622  _TEST_LED_G                
+0     00010638  _TEST_LED_Y                
+0     0001064e  _TEST_SW1                  
+0     00010666  _TEST_SW2                  
+0     0001067b  _TEST_BRIDGE               
+0     000106b0  _GPIO_Init                 
+0     00010773  _GPIO_u8GetSW1             
+0     0001077e  _GPIO_u8GetSW2             
+0     00010789  _PWM_init                  
+0     000107c6  _PWM_update                
+0     000107e7  _PWM_period                
+0     00010819  _PWM_frequency             
+0     00010848  _PWM_start                 
+0     0001085a  _DLOG_GEN_update           
+0     000108ff  FS$$DIV                    
+0     00010987  _ADC_init                  
+0     000109f0  _ADC_wait                  
+0     000109f7  _c_int00                   
+0     00010a3d  _PER_int_setup             
+0     00010a73  _PCB_LED_on                
+0     00010a78  _PCB_LED_off               
+0     00010a7d  _PCB_LED_toggle            
+0     00010a82  _PCB_out_on                
+0     00010a87  _PCB_out_off               
+0     00010a8c  _PCB_init                  
+0     00010aa4  _InitPieCtrl               
+0     00010ac3  _EnableInterrupts          
+0     00010acc  _InitPieVectTable          
+0     00010af2  _main                      
+0     00010b0c  __args_main                
+0     00010b25  C$$EXIT                    
+0     00010b25  _abort                     
+0     00010b27  _exit                      
+0     00010b3e  __register_unlock          
+0     00010b42  __register_lock            
+0     00010b46  __nop                      
+0     00010b4f  _DSP28x_DisableInt         
+0     00010b53  _DSP28x_RestoreInt         
+0     00010b56  _SetDBGIER                 
+0     00010b59  _PER_int                   
+0     00010b59  _RamfuncsLoadStart         
+0     00010b59  _RamfuncsRunStart          
+0     00010b59  ___etext__                 
+0     00010b59  etext                      
+0     00010c6a  _DSP28x_usDelay            
+0     00010c6e  _BACK_loop                 
+0     00010c70  _RamfuncsLoadEnd           
+0     00010c70  ___cinit__                 
+0     00010c70  cinit                      
 1     00000050  __stack                    
 1     00000050  _stack_start               
 1     00000350  __STACK_END                
@@ -1139,4 +1171,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                      
 abs   ffffffff  pinit                      
 
-[261 symbols]
+[276 symbols]

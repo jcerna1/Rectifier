@@ -7,6 +7,7 @@
 
 #include    "IQmathLib.h"
 
+
 // PWM frequency
 #define     SWITCH_FREQ     20000
 
@@ -36,5 +37,8 @@ typedef enum {FALSE = 0, TRUE} bool;
 // peripherals on DEBUG_STOP:
 // 0 stop immediately, 1 stop when finished, 2 run free
 #define     DEBUG_STOP      0
+
+// for debugging (MCU stop)
+#define TEST_UC_HALT __asm ("      ESTOP0");
 
 #endif // end of __DEFINE_H__ definition

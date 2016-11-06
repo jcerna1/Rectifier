@@ -3,6 +3,9 @@
 * DESCRIPTION:  initialization code
 ****************************************************************/
 #include "main.h"
+#include "DSP28x_Project.h"
+#include "GPIO.h"
+#include "TEST_GPIO.h"
 
 /**************************************************************
 * Initialization function
@@ -13,7 +16,11 @@ void main(void)
     InitSysCtrl();
     
     // GPIO initialization
-    InitGpio();
+    // old function for initialization: InitGpio();
+    GPIO_Init();
+
+    // test function for GPIO
+    // TEST_AllGPIOs();
 
     // generic init of PIE
     InitPieCtrl();

@@ -13,9 +13,11 @@ ORDERED_OBJS += \
 "./source/ADC_drv.obj" \
 "./source/BACK_loop.obj" \
 "./source/DLOG_gen.obj" \
+"./source/GPIO.obj" \
 "./source/PCB_util.obj" \
 "./source/PER_int.obj" \
 "./source/PWM_drv.obj" \
+"./source/TEST_GPIO.obj" \
 "./source/globals.obj" \
 "./source/main.obj" \
 "./source/device/F2806x_CSMPasswords.obj" \
@@ -181,8 +183,8 @@ fsync.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "source\ADC_drv.d" "source\BACK_loop.d" "source\DLOG_gen.d" "source\PCB_util.d" "source\PER_int.d" "source\PWM_drv.d" "source\globals.d" "source\main.d" "source\device\F2806x_DefaultIsr.d" "source\device\F2806x_GlobalVariableDefs.d" "source\device\F2806x_Gpio.d" "source\device\F2806x_MemCopy.d" "source\device\F2806x_PieCtrl.d" "source\device\F2806x_PieVect.d" "source\device\F2806x_SysCtrl.d" "source\device\F2806x_TempSensorConv.d" 
-	-$(RM) "source\ADC_drv.obj" "source\BACK_loop.obj" "source\DLOG_gen.obj" "source\PCB_util.obj" "source\PER_int.obj" "source\PWM_drv.obj" "source\globals.obj" "source\main.obj" "source\device\F2806x_CSMPasswords.obj" "source\device\F2806x_CodeStartBranch.obj" "source\device\F2806x_DBGIER.obj" "source\device\F2806x_DefaultIsr.obj" "source\device\F2806x_DisInt.obj" "source\device\F2806x_GlobalVariableDefs.obj" "source\device\F2806x_Gpio.obj" "source\device\F2806x_MemCopy.obj" "source\device\F2806x_PieCtrl.obj" "source\device\F2806x_PieVect.obj" "source\device\F2806x_SysCtrl.obj" "source\device\F2806x_TempSensorConv.obj" "source\device\F2806x_usDelay.obj" 
+	-$(RM) "source\ADC_drv.d" "source\BACK_loop.d" "source\DLOG_gen.d" "source\GPIO.d" "source\PCB_util.d" "source\PER_int.d" "source\PWM_drv.d" "source\TEST_GPIO.d" "source\globals.d" "source\main.d" "source\device\F2806x_DefaultIsr.d" "source\device\F2806x_GlobalVariableDefs.d" "source\device\F2806x_Gpio.d" "source\device\F2806x_MemCopy.d" "source\device\F2806x_PieCtrl.d" "source\device\F2806x_PieVect.d" "source\device\F2806x_SysCtrl.d" "source\device\F2806x_TempSensorConv.d" 
+	-$(RM) "source\ADC_drv.obj" "source\BACK_loop.obj" "source\DLOG_gen.obj" "source\GPIO.obj" "source\PCB_util.obj" "source\PER_int.obj" "source\PWM_drv.obj" "source\TEST_GPIO.obj" "source\globals.obj" "source\main.obj" "source\device\F2806x_CSMPasswords.obj" "source\device\F2806x_CodeStartBranch.obj" "source\device\F2806x_DBGIER.obj" "source\device\F2806x_DefaultIsr.obj" "source\device\F2806x_DisInt.obj" "source\device\F2806x_GlobalVariableDefs.obj" "source\device\F2806x_Gpio.obj" "source\device\F2806x_MemCopy.obj" "source\device\F2806x_PieCtrl.obj" "source\device\F2806x_PieVect.obj" "source\device\F2806x_SysCtrl.obj" "source\device\F2806x_TempSensorConv.obj" "source\device\F2806x_usDelay.obj" 
 	-$(RM) "source\device\F2806x_CSMPasswords.d" "source\device\F2806x_CodeStartBranch.d" "source\device\F2806x_DBGIER.d" "source\device\F2806x_DisInt.d" "source\device\F2806x_usDelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
