@@ -8,7 +8,6 @@ C_SRCS += \
 ../source/BACK_loop.c \
 ../source/DLOG_gen.c \
 ../source/GPIO.c \
-../source/PCB_util.c \
 ../source/PER_int.c \
 ../source/PWM_drv.c \
 ../source/TEST_GPIO.c \
@@ -20,7 +19,6 @@ OBJS += \
 ./source/BACK_loop.obj \
 ./source/DLOG_gen.obj \
 ./source/GPIO.obj \
-./source/PCB_util.obj \
 ./source/PER_int.obj \
 ./source/PWM_drv.obj \
 ./source/TEST_GPIO.obj \
@@ -32,7 +30,6 @@ C_DEPS += \
 ./source/BACK_loop.d \
 ./source/DLOG_gen.d \
 ./source/GPIO.d \
-./source/PCB_util.d \
 ./source/PER_int.d \
 ./source/PWM_drv.d \
 ./source/TEST_GPIO.d \
@@ -44,7 +41,6 @@ C_DEPS__QUOTED += \
 "source\BACK_loop.d" \
 "source\DLOG_gen.d" \
 "source\GPIO.d" \
-"source\PCB_util.d" \
 "source\PER_int.d" \
 "source\PWM_drv.d" \
 "source\TEST_GPIO.d" \
@@ -56,7 +52,6 @@ OBJS__QUOTED += \
 "source\BACK_loop.obj" \
 "source\DLOG_gen.obj" \
 "source\GPIO.obj" \
-"source\PCB_util.obj" \
 "source\PER_int.obj" \
 "source\PWM_drv.obj" \
 "source\TEST_GPIO.obj" \
@@ -68,7 +63,6 @@ C_SRCS__QUOTED += \
 "../source/BACK_loop.c" \
 "../source/DLOG_gen.c" \
 "../source/GPIO.c" \
-"../source/PCB_util.c" \
 "../source/PER_int.c" \
 "../source/PWM_drv.c" \
 "../source/TEST_GPIO.c" \

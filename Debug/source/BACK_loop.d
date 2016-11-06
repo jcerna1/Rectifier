@@ -40,7 +40,6 @@ source/BACK_loop.obj: ../include/define.h
 source/BACK_loop.obj: ../include/globals.h
 source/BACK_loop.obj: ../include/globals.h
 source/BACK_loop.obj: ../include/PWM_drv.h
-source/BACK_loop.obj: ../include/PCB_util.h
 
 ../source/BACK_loop.c: 
 ../include/BACK_loop.h: 
@@ -82,4 +81,3 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/limits.h:
 ../include/globals.h: 
 ../include/globals.h: 
 ../include/PWM_drv.h: 
-../include/PCB_util.h: 

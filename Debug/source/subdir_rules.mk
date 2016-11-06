@@ -31,13 +31,6 @@ source/GPIO.obj: ../source/GPIO.c $(GEN_OPTS) $(GEN_HDRS)
 	@echo 'Finished building: $<'
 	@echo ' '
 
-source/PCB_util.obj: ../source/PCB_util.c $(GEN_OPTS) $(GEN_HDRS)
-	@echo 'Building file: $<'
-	@echo 'Invoking: C2000 Compiler'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla0 --float_support=fpu32 --vcu_support=vcu0 --include_path="C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include" --include_path="../include" --include_path="../include/device" -g --diag_warning=225 --display_error_number --diag_wrap=off --preproc_with_compile --preproc_dependency="source/PCB_util.d" --obj_directory="source" $(GEN_OPTS__FLAG) "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
 source/PER_int.obj: ../source/PER_int.c $(GEN_OPTS) $(GEN_HDRS)
 	@echo 'Building file: $<'
 	@echo 'Invoking: C2000 Compiler'

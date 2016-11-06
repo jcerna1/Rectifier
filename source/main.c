@@ -32,9 +32,6 @@ void main(void)
     ADC_init();
     PWM_init();
 
-    // I/O pins initialization
-    PCB_init();
-
     // periodic interrupt initialization
     PER_int_setup();
 

@@ -42,7 +42,6 @@ source/main.obj: ../include/globals.h
 source/main.obj: ../include/PER_int.h
 source/main.obj: ../include/PWM_drv.h
 source/main.obj: ../include/ADC_drv.h
-source/main.obj: ../include/PCB_util.h
 source/main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h
 source/main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/linkage.h
 source/main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/_defs.h
@@ -93,7 +92,6 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/limits.h:
 ../include/PER_int.h: 
 ../include/PWM_drv.h: 
 ../include/ADC_drv.h: 
-../include/PCB_util.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/linkage.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/_defs.h: 

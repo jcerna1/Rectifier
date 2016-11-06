@@ -41,7 +41,6 @@ source/PER_int.obj: ../include/globals.h
 source/PER_int.obj: ../include/globals.h
 source/PER_int.obj: ../include/PWM_drv.h
 source/PER_int.obj: ../include/ADC_drv.h
-source/PER_int.obj: ../include/PCB_util.h
 source/PER_int.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h
 source/PER_int.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/linkage.h
 source/PER_int.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/_defs.h
@@ -90,7 +89,6 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/limits.h:
 ../include/globals.h: 
 ../include/PWM_drv.h: 
 ../include/ADC_drv.h: 
-../include/PCB_util.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/linkage.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/_defs.h: 
