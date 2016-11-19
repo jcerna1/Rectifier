@@ -11,9 +11,16 @@
 #define     ADC_MODUL1      EPwm1Regs
 
 // location of results
-#define     ADC_RESULT0     (AdcResult.ADCRESULT0)
-#define     NAPETOST        (AdcResult.ADCRESULT1)
-#define     TOK             (AdcResult.ADCRESULT2)
+#define     U_FAZA1     (AdcResult.ADCRESULT0)
+#define     U_FAZA2     (AdcResult.ADCRESULT1)
+#define     U_FAZA3     (AdcResult.ADCRESULT2)
+#define		I_FAZA1		(AdcResult.ADCRESULT4)
+#define		I_FAZA2		(AdcResult.ADCRESULT5)
+#define		I_FAZA3		(AdcResult.ADCRESULT6)
+#define		U_DC		(AdcResult.ADCRESULT8)
+#define		I_DC		(AdcResult.ADCRESULT9)
+#define		ADC_POT1	(AdcResult.ADCRESULT12)
+#define		ADC_POT2	(AdcResult.ADCRESULT14)
 
 /**************************************************************
 * initialize ADC

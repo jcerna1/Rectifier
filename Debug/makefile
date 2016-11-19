@@ -150,32 +150,32 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-fsync.out \
+Rectifier.out \
 
 EXE_OUTPUTS__QUOTED += \
-"fsync.out" \
+"Rectifier.out" \
 
 BIN_OUTPUTS += \
-fsync.hex \
+Rectifier.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"fsync.hex" \
+"Rectifier.hex" \
 
 
 # All Target
-all: fsync.out
+all: Rectifier.out
 
 # Tool invocations
-fsync.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
+Rectifier.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla0 --float_support=fpu32 --vcu_support=vcu0 -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"fsync.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="fsync_linkInfo.xml" --rom_model -o "fsync.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla0 --float_support=fpu32 --vcu_support=vcu0 -g --diag_warning=225 --display_error_number --diag_wrap=off -z -m"Rectifier.map" --stack_size=0x300 --warn_sections -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include" --reread_libs --display_error_number --diag_wrap=off --xml_link_info="Rectifier_linkInfo.xml" --rom_model -o "Rectifier.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-fsync.hex: $(EXE_OUTPUTS)
+Rectifier.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: C2000 Hex Utility'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/bin/hex2000"  -o "fsync.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/bin/hex2000"  -o "Rectifier.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 

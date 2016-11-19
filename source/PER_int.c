@@ -6,6 +6,18 @@
 #include    "TIC_toc.h"
 #include	"math.h"
 
+//for ADC variables
+int u_faza1 = 0;
+int u_faza2 = 0;
+int u_faza3 = 0;
+int i_faza1 = 0;
+int i_faza2 = 0;
+int i_faza3 = 0;
+int u_dc = 0;
+int i_dc = 0;
+int adc_pot1 = 0;
+int adc_pot2 = 0;
+
 // CPU load evaluation
 float   cpu_load  = 0.0;
 long    interrupt_cycles = 0;
@@ -42,6 +54,20 @@ void interrupt PER_int(void)
     // INTERRUPT CODE HERE
     // INTERRUPT CODE HERE
     // INTERRUPT CODE HERE
+
+
+	//za testiranje
+	u_faza1 = U_FAZA1;
+	u_faza2 = U_FAZA2;
+	u_faza3 = U_FAZA3;
+	i_faza1 = I_FAZA1;
+	i_faza2 = I_FAZA2;
+	i_faza3 = I_FAZA3;
+	u_dc = U_DC;
+	i_dc = I_DC;
+	adc_pot1 = ADC_POT1;
+	adc_pot2 = ADC_POT2;
+	__asm ("      ESTOP0");
 
     // save values in buffer
     DLOG_GEN_update();

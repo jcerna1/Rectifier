@@ -55,19 +55,54 @@ void ADC_init(void)
     ADC_MODUL1.ETSEL.bit.SOCAEN = 1;             // enable ADC Start Of conversion
 
     // SOC0 config
-    AdcRegs.ADCSOC0CTL.bit.CHSEL = 0x6;     //set SOC0 channel select to ADCINA1
+    AdcRegs.ADCSOC0CTL.bit.CHSEL= 0;
     AdcRegs.ADCSOC0CTL.bit.TRIGSEL = 0x05;  //set SOC0 to start trigger on EPWM1A
     AdcRegs.ADCSOC0CTL.bit.ACQPS = 0X015;
 
     // SOC1 config
-    AdcRegs.ADCSOC1CTL.bit.CHSEL = 0x6;     //set SOC1 channel select to ADCINA1
+    AdcRegs.ADCSOC1CTL.bit.CHSEL= 1;
     AdcRegs.ADCSOC1CTL.bit.TRIGSEL = 0x05;  //set SOC1 to start trigger on EPWM1A
     AdcRegs.ADCSOC1CTL.bit.ACQPS = 0X015;
 
     // SOC2 config
-    AdcRegs.ADCSOC2CTL.bit.CHSEL = 0x4;     //set SOC2 channel select to ADCINA0
+    AdcRegs.ADCSOC2CTL.bit.CHSEL= 2;
     AdcRegs.ADCSOC2CTL.bit.TRIGSEL = 0x05;  //set SOC2 to start trigger on EPWM1A
     AdcRegs.ADCSOC2CTL.bit.ACQPS = 0X015;
+
+    // SOC3 config
+    AdcRegs.ADCSOC4CTL.bit.CHSEL= 4;
+    AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 0x05;  //set SOC3 to start trigger on EPWM1A
+    AdcRegs.ADCSOC4CTL.bit.ACQPS = 0X015;
+
+    // SOC4 config
+    AdcRegs.ADCSOC5CTL.bit.CHSEL= 5;
+    AdcRegs.ADCSOC5CTL.bit.TRIGSEL = 0x05;  //set SOC4 to start trigger on EPWM1A
+    AdcRegs.ADCSOC5CTL.bit.ACQPS = 0X015;
+
+    // SOC5 config
+    AdcRegs.ADCSOC6CTL.bit.CHSEL= 6;
+    AdcRegs.ADCSOC6CTL.bit.TRIGSEL = 0x05;  //set SOC5 to start trigger on EPWM1A
+    AdcRegs.ADCSOC6CTL.bit.ACQPS = 0X015;
+
+    // SOC6 config
+    AdcRegs.ADCSOC8CTL.bit.CHSEL= 8;
+    AdcRegs.ADCSOC8CTL.bit.TRIGSEL = 0x05;  //set SOC6 to start trigger on EPWM1A
+    AdcRegs.ADCSOC8CTL.bit.ACQPS = 0X015;
+
+    // SOC7 config
+    AdcRegs.ADCSOC9CTL.bit.CHSEL= 9;
+    AdcRegs.ADCSOC9CTL.bit.TRIGSEL = 0x05;  //set SOC7 to start trigger on EPWM1A
+    AdcRegs.ADCSOC9CTL.bit.ACQPS = 0X015;
+
+    // SOC8 config
+    AdcRegs.ADCSOC12CTL.bit.CHSEL= 12;
+    AdcRegs.ADCSOC12CTL.bit.TRIGSEL = 0x05;  //set SOC8 to start trigger on EPWM1A
+    AdcRegs.ADCSOC12CTL.bit.ACQPS = 0X015;
+
+    // SOC9 config
+    AdcRegs.ADCSOC14CTL.bit.CHSEL= 14;
+    AdcRegs.ADCSOC14CTL.bit.TRIGSEL = 0x05;  //set SOC9 to start trigger on EPWM1A
+    AdcRegs.ADCSOC14CTL.bit.ACQPS = 0X015;
 
     // set interrupt flag when last coversion is finished ...
     // while interrupt is still disabled, the interrupt flag will serve us
