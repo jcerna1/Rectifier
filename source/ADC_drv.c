@@ -38,7 +38,7 @@ void ADC_init(void)
     AdcRegs.ADCCTL1.bit.ADCPWDN = 1;        // Power ADC - enable analogue circuit inside MCU
     AdcRegs.ADCCTL1.bit.ADCENABLE = 1;      // Enable ADC
     AdcRegs.ADCCTL1.bit.ADCREFSEL = 0;      // Select interal BG (internal reference)
-    AdcRegs.ADCCTL1.bit.TEMPCONV = 1;       // Internal temperature sensor on ADCIN5 input
+    AdcRegs.ADCCTL1.bit.TEMPCONV = 0;       // Internal temperature sensor disabled
     AdcRegs.ADCCTL1.bit.INTPULSEPOS = 1;
     EDIS;
 
@@ -55,58 +55,61 @@ void ADC_init(void)
     ADC_MODUL1.ETSEL.bit.SOCAEN = 1;             // enable ADC Start Of conversion
 
     // SOC0 config
-    AdcRegs.ADCSOC0CTL.bit.CHSEL= 0;
+    AdcRegs.ADCSOC0CTL.bit.CHSEL= 0; //input U_FAZA1
     AdcRegs.ADCSOC0CTL.bit.TRIGSEL = 0x05;  //set SOC0 to start trigger on EPWM1A
     AdcRegs.ADCSOC0CTL.bit.ACQPS = 0X015;
 
     // SOC1 config
-    AdcRegs.ADCSOC1CTL.bit.CHSEL= 1;
+    AdcRegs.ADCSOC1CTL.bit.CHSEL= 1; //input U_FAZA2
     AdcRegs.ADCSOC1CTL.bit.TRIGSEL = 0x05;  //set SOC1 to start trigger on EPWM1A
     AdcRegs.ADCSOC1CTL.bit.ACQPS = 0X015;
 
     // SOC2 config
-    AdcRegs.ADCSOC2CTL.bit.CHSEL= 2;
+    AdcRegs.ADCSOC2CTL.bit.CHSEL= 2; //input U_FAZA3
     AdcRegs.ADCSOC2CTL.bit.TRIGSEL = 0x05;  //set SOC2 to start trigger on EPWM1A
     AdcRegs.ADCSOC2CTL.bit.ACQPS = 0X015;
 
     // SOC3 config
-    AdcRegs.ADCSOC4CTL.bit.CHSEL= 4;
-    AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 0x05;  //set SOC3 to start trigger on EPWM1A
-    AdcRegs.ADCSOC4CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC3CTL.bit.CHSEL= 4; //input I_FAZA1
+    AdcRegs.ADCSOC3CTL.bit.TRIGSEL = 0x05;  //set SOC3 to start trigger on EPWM1A
+    AdcRegs.ADCSOC3CTL.bit.ACQPS = 0X015;
 
     // SOC4 config
-    AdcRegs.ADCSOC5CTL.bit.CHSEL= 5;
-    AdcRegs.ADCSOC5CTL.bit.TRIGSEL = 0x05;  //set SOC4 to start trigger on EPWM1A
-    AdcRegs.ADCSOC5CTL.bit.ACQPS = 0X015;
+
+    AdcRegs.ADCSOC4CTL.bit.CHSEL= 5; //input I_FAZA2
+    AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 0x05;  //set SOC4 to start trigger on EPWM1A
+    AdcRegs.ADCSOC4CTL.bit.ACQPS = 0X015;
+
 
     // SOC5 config
-    AdcRegs.ADCSOC6CTL.bit.CHSEL= 6;
-    AdcRegs.ADCSOC6CTL.bit.TRIGSEL = 0x05;  //set SOC5 to start trigger on EPWM1A
-    AdcRegs.ADCSOC6CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC5CTL.bit.CHSEL= 6; //input I_FAZA3
+    AdcRegs.ADCSOC5CTL.bit.TRIGSEL = 0x05;  //set SOC5 to start trigger on EPWM1A
+    AdcRegs.ADCSOC5CTL.bit.ACQPS = 0X015;
 
     // SOC6 config
-    AdcRegs.ADCSOC8CTL.bit.CHSEL= 8;
-    AdcRegs.ADCSOC8CTL.bit.TRIGSEL = 0x05;  //set SOC6 to start trigger on EPWM1A
-    AdcRegs.ADCSOC8CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC6CTL.bit.CHSEL= 8; //input U_DC
+    AdcRegs.ADCSOC6CTL.bit.TRIGSEL = 0x05;  //set SOC6 to start trigger on EPWM1A
+    AdcRegs.ADCSOC6CTL.bit.ACQPS = 0X015;
 
     // SOC7 config
-    AdcRegs.ADCSOC9CTL.bit.CHSEL= 9;
-    AdcRegs.ADCSOC9CTL.bit.TRIGSEL = 0x05;  //set SOC7 to start trigger on EPWM1A
-    AdcRegs.ADCSOC9CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC7CTL.bit.CHSEL= 9; //input I_DC
+    AdcRegs.ADCSOC7CTL.bit.TRIGSEL = 0x05;  //set SOC7 to start trigger on EPWM1A
+    AdcRegs.ADCSOC7CTL.bit.ACQPS = 0X015;
 
     // SOC8 config
-    AdcRegs.ADCSOC12CTL.bit.CHSEL= 12;
-    AdcRegs.ADCSOC12CTL.bit.TRIGSEL = 0x05;  //set SOC8 to start trigger on EPWM1A
-    AdcRegs.ADCSOC12CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC8CTL.bit.CHSEL= 12; //input ADC_POT1
+    AdcRegs.ADCSOC8CTL.bit.TRIGSEL = 0x05;  //set SOC8 to start trigger on EPWM1A
+    AdcRegs.ADCSOC8CTL.bit.ACQPS = 0X015;
 
     // SOC9 config
-    AdcRegs.ADCSOC14CTL.bit.CHSEL= 14;
-    AdcRegs.ADCSOC14CTL.bit.TRIGSEL = 0x05;  //set SOC9 to start trigger on EPWM1A
-    AdcRegs.ADCSOC14CTL.bit.ACQPS = 0X015;
+    AdcRegs.ADCSOC9CTL.bit.CHSEL= 14; //input ADC_POT2
+    AdcRegs.ADCSOC9CTL.bit.TRIGSEL = 0x05;  //set SOC9 to start trigger on EPWM1A
+    AdcRegs.ADCSOC9CTL.bit.ACQPS = 0X015;
+
 
     // set interrupt flag when last coversion is finished ...
     // while interrupt is still disabled, the interrupt flag will serve us
-    // to detect the end of coversion
+    // to detect the end of conversion
     AdcRegs.INTSEL1N2.bit.INT1SEL = 0x00;   // interrupt1 tiggers signal EOC1 (this one is the last to run)
     AdcRegs.INTSEL1N2.bit.INT1E = 1;        // interrupt at interrupt event is disabled (so flag can be set)
     AdcRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;   // clear the flag

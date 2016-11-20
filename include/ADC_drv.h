@@ -11,16 +11,16 @@
 #define     ADC_MODUL1      EPwm1Regs
 
 // location of results
-#define     U_FAZA1     (AdcResult.ADCRESULT0)
-#define     U_FAZA2     (AdcResult.ADCRESULT1)
-#define     U_FAZA3     (AdcResult.ADCRESULT2)
-#define		I_FAZA1		(AdcResult.ADCRESULT4)
-#define		I_FAZA2		(AdcResult.ADCRESULT5)
-#define		I_FAZA3		(AdcResult.ADCRESULT6)
-#define		U_DC		(AdcResult.ADCRESULT8)
-#define		I_DC		(AdcResult.ADCRESULT9)
-#define		ADC_POT1	(AdcResult.ADCRESULT12)
-#define		ADC_POT2	(AdcResult.ADCRESULT14)
+#define     U_FAZA1     (AdcResult.ADCRESULT0) //voltage of phase 1
+#define     U_FAZA2     (AdcResult.ADCRESULT1) //voltage of phase 2
+#define     U_FAZA3     (AdcResult.ADCRESULT2) //voltage of phase 3
+#define		I_FAZA1		(AdcResult.ADCRESULT3) //current of phase 1
+#define		I_FAZA2		(AdcResult.ADCRESULT4) //current of phase 2
+#define		I_FAZA3		(AdcResult.ADCRESULT5) //current of phase 3
+#define		U_DC		(AdcResult.ADCRESULT6) //voltage of DC output
+#define		I_DC		(AdcResult.ADCRESULT7) //current of DC output
+#define		ADC_POT1	(AdcResult.ADCRESULT8) //voltage of potentiometer 1
+#define		ADC_POT2	(AdcResult.ADCRESULT9) //voltage of potentiometer 2
 
 /**************************************************************
 * initialize ADC
