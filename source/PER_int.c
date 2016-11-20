@@ -7,16 +7,26 @@
 #include	"math.h"
 
 //for ADC variables
-int u_faza1 = 0;
-int u_faza2 = 0;
-int u_faza3 = 0;
-int i_faza1 = 0;
-int i_faza2 = 0;
-int i_faza3 = 0;
-int u_dc = 0;
-int i_dc = 0;
-int adc_pot1 = 0;
-int adc_pot2 = 0;
+float u_faza1 = 0.0; //phase 1 voltage [V]
+float u_faza2 = 0.0; //phase 2 voltage [V]
+float u_faza3 = 0.0; //phase 3 voltage [V]
+float i_faza1 = 0.0; //phase 1 current [A]
+float i_faza2 = 0.0; //phase 2 current [A]
+float i_faza3 = 0.0; //phase 3 current [A]
+float u_dc = 0.0; //DC output voltage [V]
+float i_dc = 0.0; //DC output current [A]
+float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
+float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
+
+//GAIN/OFFSET values
+float u_faza1_gain = 0.0042502450;
+float u_faza1_offset = 0.4616595883;
+float u_faza2_gain = 0.004459308;
+float u_faza2_offset = -0.044593088;
+float u_faza3_gain = 0.004456824;
+float u_faza3_offset = -0.102506963;
+float u_dc_gain = 0.004383561;
+float u_dc_offset = 0.298082191;
 
 // CPU load evaluation
 float   cpu_load  = 0.0;
@@ -57,16 +67,16 @@ void interrupt PER_int(void)
 
 
 	//za testiranje
-	u_faza1 = U_FAZA1;
-	u_faza2 = U_FAZA2;
-	u_faza3 = U_FAZA3;
+	u_faza1 = U_FAZA1*u_faza1_gain+u_faza1_offset;
+	u_faza2 = U_FAZA2*u_faza2_gain+u_faza2_offset;
+	u_faza3 = U_FAZA3*u_faza3_gain+u_faza3_offset;
 	i_faza1 = I_FAZA1;
 	i_faza2 = I_FAZA2;
 	i_faza3 = I_FAZA3;
-	u_dc = U_DC;
+	u_dc = U_DC*u_dc_gain+u_dc_offset;
 	i_dc = I_DC;
-	adc_pot1 = ADC_POT1;
-	adc_pot2 = ADC_POT2;
+	adc_pot1 = ADC_POT1/4095.0;
+	adc_pot2 = ADC_POT2/4095.0;
 	__asm ("      ESTOP0");
 
     // save values in buffer
