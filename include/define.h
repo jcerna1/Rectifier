@@ -9,7 +9,7 @@
 
 
 // PWM frequency
-#define     SWITCH_FREQ     20000
+#define     SWITCH_FREQ     40000
 
 // prescaler
 #define   	SAMP_PRESCALE   1

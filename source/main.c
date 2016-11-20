@@ -17,7 +17,7 @@ void main(void)
     
     // GPIO initialization
     // old function for initialization: InitGpio();
-    //GPIO_Init();
+    GPIO_Init();
 
     // test function for GPIO
     // TEST_AllGPIOs();

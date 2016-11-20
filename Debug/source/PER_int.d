@@ -47,6 +47,7 @@ source/PER_int.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/
 source/PER_int.obj: ../include/DLOG_gen.h
 source/PER_int.obj: ../include/TIC_toc.h
 source/PER_int.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h
+source/PER_int.obj: ../include/GPIO.h
 
 ../source/PER_int.c: 
 ../include/PER_int.h: 
@@ -95,3 +96,4 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/_defs.h:
 ../include/DLOG_gen.h: 
 ../include/TIC_toc.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-c2000_15.12.1.LTS/include/math.h: 
+../include/GPIO.h: 

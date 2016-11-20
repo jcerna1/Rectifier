@@ -5,6 +5,7 @@
 #include    "PER_int.h"
 #include    "TIC_toc.h"
 #include	"math.h"
+#include 	"GPIO.h"
 
 //for ADC variables
 float u_faza1 = 0.0; //phase 1 voltage [V]
@@ -66,7 +67,7 @@ void interrupt PER_int(void)
     // INTERRUPT CODE HERE
 
 
-	//za testiranje
+	// ADC calibration testing
 	u_faza1 = U_FAZA1*u_faza1_gain+u_faza1_offset;
 	u_faza2 = U_FAZA2*u_faza2_gain+u_faza2_offset;
 	u_faza3 = U_FAZA3*u_faza3_gain+u_faza3_offset;
@@ -77,10 +78,15 @@ void interrupt PER_int(void)
 	i_dc = I_DC;
 	adc_pot1 = ADC_POT1/4095.0;
 	adc_pot2 = ADC_POT2/4095.0;
-	__asm ("      ESTOP0");
+
+	// pin toggling to test interrupt frequency
+	GPIO_Set(GPIO_LED_Y); //toggle pin #24 - Yellow LED
+
+	//__asm ("      ESTOP0");
 
     // save values in buffer
     DLOG_GEN_update();
+    GPIO_Toggle(GPIO_LED_Y);
 
     /* check for interrupt while this interrupt is running -
      * if true, there is something wrong - if we count 10 such
