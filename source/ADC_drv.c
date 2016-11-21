@@ -54,57 +54,61 @@ void ADC_init(void)
     ADC_MODUL1.ETCLR.bit.SOCA = 1;               // clear possible flag
     ADC_MODUL1.ETSEL.bit.SOCAEN = 1;             // enable ADC Start Of conversion
 
-    // SOC0 config
+
+    // SO0C config - dummy
     AdcRegs.ADCSOC0CTL.bit.CHSEL= 0; //input U_FAZA1
     AdcRegs.ADCSOC0CTL.bit.TRIGSEL = 0x05;  //set SOC0 to start trigger on EPWM1A
     AdcRegs.ADCSOC0CTL.bit.ACQPS = 0X015;
 
     // SOC1 config
-    AdcRegs.ADCSOC1CTL.bit.CHSEL= 1; //input U_FAZA2
-    AdcRegs.ADCSOC1CTL.bit.TRIGSEL = 0x05;  //set SOC1 to start trigger on EPWM1A
+    AdcRegs.ADCSOC1CTL.bit.CHSEL= 0; //input U_FAZA1
+    AdcRegs.ADCSOC1CTL.bit.TRIGSEL = 0x05;  //set SOC0 to start trigger on EPWM1A
     AdcRegs.ADCSOC1CTL.bit.ACQPS = 0X015;
 
     // SOC2 config
-    AdcRegs.ADCSOC2CTL.bit.CHSEL= 2; //input U_FAZA3
-    AdcRegs.ADCSOC2CTL.bit.TRIGSEL = 0x05;  //set SOC2 to start trigger on EPWM1A
+    AdcRegs.ADCSOC2CTL.bit.CHSEL= 1; //input U_FAZA2
+    AdcRegs.ADCSOC2CTL.bit.TRIGSEL = 0x05;  //set SOC1 to start trigger on EPWM1A
     AdcRegs.ADCSOC2CTL.bit.ACQPS = 0X015;
 
     // SOC3 config
-    AdcRegs.ADCSOC3CTL.bit.CHSEL= 4; //input I_FAZA1
-    AdcRegs.ADCSOC3CTL.bit.TRIGSEL = 0x05;  //set SOC3 to start trigger on EPWM1A
+    AdcRegs.ADCSOC3CTL.bit.CHSEL= 2; //input U_FAZA3
+    AdcRegs.ADCSOC3CTL.bit.TRIGSEL = 0x05;  //set SOC2 to start trigger on EPWM1A
     AdcRegs.ADCSOC3CTL.bit.ACQPS = 0X015;
 
     // SOC4 config
-
-    AdcRegs.ADCSOC4CTL.bit.CHSEL= 5; //input I_FAZA2
-    AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 0x05;  //set SOC4 to start trigger on EPWM1A
+    AdcRegs.ADCSOC4CTL.bit.CHSEL= 4; //input I_FAZA1
+    AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 0x05;  //set SOC3 to start trigger on EPWM1A
     AdcRegs.ADCSOC4CTL.bit.ACQPS = 0X015;
 
-
     // SOC5 config
-    AdcRegs.ADCSOC5CTL.bit.CHSEL= 6; //input I_FAZA3
-    AdcRegs.ADCSOC5CTL.bit.TRIGSEL = 0x05;  //set SOC5 to start trigger on EPWM1A
+    AdcRegs.ADCSOC5CTL.bit.CHSEL= 5; //input I_FAZA2
+    AdcRegs.ADCSOC5CTL.bit.TRIGSEL = 0x05;  //set SOC4 to start trigger on EPWM1A
     AdcRegs.ADCSOC5CTL.bit.ACQPS = 0X015;
 
     // SOC6 config
-    AdcRegs.ADCSOC6CTL.bit.CHSEL= 8; //input U_DC
-    AdcRegs.ADCSOC6CTL.bit.TRIGSEL = 0x05;  //set SOC6 to start trigger on EPWM1A
+    AdcRegs.ADCSOC6CTL.bit.CHSEL= 6; //input I_FAZA3
+    AdcRegs.ADCSOC6CTL.bit.TRIGSEL = 0x05;  //set SOC5 to start trigger on EPWM1A
     AdcRegs.ADCSOC6CTL.bit.ACQPS = 0X015;
 
     // SOC7 config
-    AdcRegs.ADCSOC7CTL.bit.CHSEL= 9; //input I_DC
-    AdcRegs.ADCSOC7CTL.bit.TRIGSEL = 0x05;  //set SOC7 to start trigger on EPWM1A
+    AdcRegs.ADCSOC7CTL.bit.CHSEL= 8; //input U_DC
+    AdcRegs.ADCSOC7CTL.bit.TRIGSEL = 0x05;  //set SOC6 to start trigger on EPWM1A
     AdcRegs.ADCSOC7CTL.bit.ACQPS = 0X015;
 
     // SOC8 config
-    AdcRegs.ADCSOC8CTL.bit.CHSEL= 12; //input ADC_POT1
-    AdcRegs.ADCSOC8CTL.bit.TRIGSEL = 0x05;  //set SOC8 to start trigger on EPWM1A
+    AdcRegs.ADCSOC8CTL.bit.CHSEL= 9; //input I_DC
+    AdcRegs.ADCSOC8CTL.bit.TRIGSEL = 0x05;  //set SOC7 to start trigger on EPWM1A
     AdcRegs.ADCSOC8CTL.bit.ACQPS = 0X015;
 
     // SOC9 config
-    AdcRegs.ADCSOC9CTL.bit.CHSEL= 14; //input ADC_POT2
-    AdcRegs.ADCSOC9CTL.bit.TRIGSEL = 0x05;  //set SOC9 to start trigger on EPWM1A
+    AdcRegs.ADCSOC9CTL.bit.CHSEL= 12; //input ADC_POT1
+    AdcRegs.ADCSOC9CTL.bit.TRIGSEL = 0x05;  //set SOC8 to start trigger on EPWM1A
     AdcRegs.ADCSOC9CTL.bit.ACQPS = 0X015;
+
+    // SOC10 config
+    AdcRegs.ADCSOC10CTL.bit.CHSEL= 14; //input ADC_POT2
+    AdcRegs.ADCSOC10CTL.bit.TRIGSEL = 0x05;  //set SOC9 to start trigger on EPWM1A
+    AdcRegs.ADCSOC10CTL.bit.ACQPS = 0X015;
 
 
     // set interrupt flag when last coversion is finished ...
