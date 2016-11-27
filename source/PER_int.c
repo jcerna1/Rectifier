@@ -8,7 +8,10 @@
 #include 	"GPIO.h"
 
 //for ADC variables
-//int RAW = 0;
+int F1 = 0;
+int F2 = 0;
+int F3 = 0;
+int DC = 0;
 float u_faza1 = 0.0; //phase 1 voltage [V]
 float u_faza2 = 0.0; //phase 2 voltage [V]
 float u_faza3 = 0.0; //phase 3 voltage [V]
@@ -21,14 +24,14 @@ float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
 //GAIN/OFFSET values
-float u_faza1_gain = 0.004359347;
-float u_faza1_offset = 0.179927198;
-float u_faza2_gain = 0.004459308;
-float u_faza2_offset = -0.044593088;
-float u_faza3_gain = 0.004456824;
-float u_faza3_offset = -0.102506963;
-float u_dc_gain = 0.004383561;
-float u_dc_offset = 0.298082191;
+float u_faza1_gain = 0.004474398;
+float u_faza1_offset = 0.012685033;
+float u_faza2_gain = 0.004417942;
+float u_faza2_offset = 0.024390625;
+float u_faza3_gain = 0.004421897;
+float u_faza3_offset = 0.022075010;
+float u_dc_gain = 0.004429593;
+float u_dc_offset = 0.014512117;
 
 // CPU load evaluation
 float   cpu_load  = 0.0;
@@ -69,7 +72,10 @@ void interrupt PER_int(void)
 
 
 	// ADC calibration testing
-    //RAW = U_FAZA1;
+    F1 = U_FAZA1;
+    F2 = U_FAZA2;
+    F3 = U_FAZA3;
+    DC = U_DC;
 	u_faza1 = U_FAZA1*u_faza1_gain+u_faza1_offset;
 	u_faza2 = U_FAZA2*u_faza2_gain+u_faza2_offset;
 	u_faza3 = U_FAZA3*u_faza3_gain+u_faza3_offset;
