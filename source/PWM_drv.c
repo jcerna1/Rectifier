@@ -14,37 +14,37 @@
 **************************************************************/
 void PWM_init(void)
 {
-//EPWM Module 1
+//EPWM Module 4
     // setup timer base 
-    EPwm1Regs.TBPRD = PWM_PERIOD/2;       // set to 25us, PWM_PERIOD = 50us
-    EPwm1Regs.TBCTL.bit.PHSDIR = 0;       // count up after sync
-    EPwm1Regs.TBCTL.bit.CLKDIV = 0;
-    EPwm1Regs.TBCTL.bit.HSPCLKDIV = 0;
-    EPwm1Regs.TBCTL.bit.SYNCOSEL = 1;     // sync out on zero
-    EPwm1Regs.TBCTL.bit.PRDLD = 0;        // shadowed period reload
-    EPwm1Regs.TBCTL.bit.PHSEN = 0;        // master timer does not sync  
-    EPwm1Regs.TBCTR = 1;
+    EPwm4Regs.TBPRD = PWM_PERIOD/2;       // set to 25us, PWM_PERIOD = 50us
+    EPwm4Regs.TBCTL.bit.PHSDIR = 0;       // count up after sync
+    EPwm4Regs.TBCTL.bit.CLKDIV = 0;
+    EPwm4Regs.TBCTL.bit.HSPCLKDIV = 0;
+    EPwm4Regs.TBCTL.bit.SYNCOSEL = 1;     // sync out on zero
+    EPwm4Regs.TBCTL.bit.PRDLD = 0;        // shadowed period reload
+    EPwm4Regs.TBCTL.bit.PHSEN = 0;        // master timer does not sync
+    EPwm4Regs.TBCTR = 1;
 
-        // debug mode behafiour
+        // debug mode behaviour
     #if PWM_DEBUG == 0
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 0;  // stop immediately
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 0;  // stop immediately
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 0;  // stop immediately
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 0;  // stop immediately
     #endif
     #if PWM_DEBUG == 1
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 1;  // stop when finished
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 1;  // stop when finished
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 1;  // stop when finished
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 1;  // stop when finished
     #endif
     #if FB_DEBUG == 2
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
-    EPwm1Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
+    EPwm4Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
     #endif
     
     // Compare registers
-    EPwm1Regs.CMPA.half.CMPA = PWM_PERIOD/4;                 //50% duty cycle
+    EPwm4Regs.CMPA.half.CMPA = PWM_PERIOD/4;                 //50% duty cycle
 
     // Init Action Qualifier Output A Register 
-    EPwm1Regs.AQCTLA.bit.CAU = AQ_CLEAR;  // clear output on CMPA_UP
-    EPwm1Regs.AQCTLA.bit.CAD = AQ_SET;    // set output on CMPA_DOWN
+    EPwm4Regs.AQCTLA.bit.CAU = AQ_CLEAR;  // clear output on CMPA_UP
+    EPwm4Regs.AQCTLA.bit.CAD = AQ_SET;    // set output on CMPA_DOWN
 
     // Dead Time
     
@@ -52,15 +52,15 @@ void PWM_init(void)
 
     // Event trigger
     // Proženje ADC-ja
-    EPwm1Regs.ETSEL.bit.SOCASEL = 2;    // trigger on period
-    EPwm1Regs.ETPS.bit.SOCAPRD = 1;     // at each first case
-    EPwm1Regs.ETCLR.bit.SOCA = 1;       // clear possible flag
-    EPwm1Regs.ETSEL.bit.SOCAEN = 1;     // enable ADC Start Of conversion
+    EPwm4Regs.ETSEL.bit.SOCASEL = 2;    // trigger on period
+    EPwm4Regs.ETPS.bit.SOCAPRD = 1;     // at each first case
+    EPwm4Regs.ETCLR.bit.SOCA = 1;       // clear possible flag
+    EPwm4Regs.ETSEL.bit.SOCAEN = 1;     // enable ADC Start Of conversion
     // Proženje prekinitve 
-    EPwm1Regs.ETSEL.bit.INTSEL = 2;             // trigger on period
-    EPwm1Regs.ETPS.bit.INTPRD = PWM_INT_PSCL;   // at each first case
-    EPwm1Regs.ETCLR.bit.INT = 1;                // clear possible flag
-    EPwm1Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
+    EPwm4Regs.ETSEL.bit.INTSEL = 2;             // trigger on period
+    EPwm4Regs.ETPS.bit.INTPRD = PWM_INT_PSCL;   // at each first case
+    EPwm4Regs.ETCLR.bit.INT = 1;                // clear possible flag
+    EPwm4Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
 
 //EPWM Module 2
 
@@ -88,7 +88,7 @@ void PWM_update(float duty)
     compare = (int)((PWM_PERIOD/2) * duty);
 
     // write the value to register
-    EPwm1Regs.CMPA.half.CMPA = compare;
+    EPwm4Regs.CMPA.half.CMPA = compare;
     
 
 }  //end of AP_PWM_update
@@ -120,7 +120,7 @@ void PWM_period(float perioda)
     }
     
     // set TBPER
-    EPwm1Regs.TBPRD = celi_del;
+    EPwm4Regs.TBPRD = celi_del;
 }   //end of FB_period
 
 /**************************************************************
@@ -150,7 +150,7 @@ void PWM_frequency(float frekvenca)
     }
     
     // set TBPER
-    EPwm1Regs.TBPRD = celi_del - 1;
+    EPwm4Regs.TBPRD = celi_del - 1;
 }   //end of FB_frequency
   
 /**************************************************************
@@ -161,7 +161,7 @@ void PWM_start(void)
 {
     EALLOW;
     SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 0;
-    EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
+    EPwm4Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
     SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 1;
     EDIS;
     

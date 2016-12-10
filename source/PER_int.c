@@ -51,8 +51,8 @@ int interrupt_overflow_counter = 0;
 void interrupt PER_int(void)
 {
     // acknowledge interrupt:
-    // Clear INT flag - ePWM1
-    EPwm1Regs.ETCLR.bit.INT = 1;
+    // Clear INT flag - ePWM4
+    EPwm4Regs.ETCLR.bit.INT = 1;
     // Clear INT flag- PIE
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
 
@@ -88,19 +88,18 @@ void interrupt PER_int(void)
 	adc_pot2 = ADC_POT2/4095.0;
 
 	// pin toggling to test interrupt frequency
-	//GPIO_Set(GPIO_LED_Y); //toggle pin #24 - Yellow LED
+	GPIO_Toggle(GPIO_LED_Y); //toggle pin #24 - Yellow LED
 
 	__asm ("      ESTOP0");
 
     // save values in buffer
     DLOG_GEN_update();
-    GPIO_Toggle(GPIO_LED_Y);
 
     /* check for interrupt while this interrupt is running -
      * if true, there is something wrong - if we count 10 such
      * occurances, something is seriousely wrong!
      */
-    if (EPwm1Regs.ETFLG.bit.INT == TRUE)
+    if (EPwm4Regs.ETFLG.bit.INT == TRUE)
     {
         // increase error counter
         interrupt_overflow_counter = interrupt_overflow_counter + 1;
@@ -124,10 +123,10 @@ void PER_int_setup(void)
 {
 
     // Interrupt triggering
-    EPwm1Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;    // trigger on period
-    EPwm1Regs.ETPS.bit.INTPRD = ET_1ST;         // at each first case
-    EPwm1Regs.ETCLR.bit.INT = 1;                // clear possible flag
-    EPwm1Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
+    EPwm4Regs.ETSEL.bit.INTSEL = ET_CTR_ZERO;    // trigger on period
+    EPwm4Regs.ETPS.bit.INTPRD = ET_1ST;         // at each first case
+    EPwm4Regs.ETCLR.bit.INT = 1;                // clear possible flag
+    EPwm4Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
 
     // Data logger initialization
     dlog.trig_value = 0;    			   // specify trigger value
@@ -144,10 +143,10 @@ void PER_int_setup(void)
 
     // acknowledge interrupt
     EALLOW;
-    PieVectTable.EPWM1_INT = &PER_int;
+    PieVectTable.EPWM4_INT = &PER_int;
     EDIS;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP3;
-    PieCtrlRegs.PIEIER3.bit.INTx1 = 1;
+    PieCtrlRegs.PIEIER3.bit.INTx4 = 1;
     IER |= M_INT3;
     // interrupt in real time (for main loop and BACK_loop debugging)
     SetDBGIER(M_INT3);

@@ -8,7 +8,7 @@
 #include    "DSP28x_Project.h"
 
 // set which PWM module triggers ADC
-#define     ADC_MODUL1      EPwm1Regs
+#define     ADC_MODUL4      EPwm4Regs
 
 // location of results
 #define     U_FAZA1     (AdcResult.ADCRESULT1) //voltage of phase 1
