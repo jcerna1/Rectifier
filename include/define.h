@@ -11,6 +11,9 @@
 // PWM frequency
 #define     SWITCH_FREQ     40000
 
+// Phase frequency
+#define		PHASE_FREQ		1000
+
 // prescaler
 #define   	SAMP_PRESCALE   1
 
@@ -39,6 +42,6 @@ typedef enum {FALSE = 0, TRUE} bool;
 #define     DEBUG_STOP      0
 
 // for debugging (MCU stop)
-#define TEST_UC_HALT __asm ("      ESTOP0");
+#define 	TEST_UC_HALT 		__asm ("      ESTOP0");
 
 #endif // end of __DEFINE_H__ definition

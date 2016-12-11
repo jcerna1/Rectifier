@@ -91,6 +91,7 @@ void interrupt PER_int(void)
 	GPIO_Toggle(GPIO_LED_Y); //toggle pin #24 - Yellow LED
 
 	__asm ("      ESTOP0");
+	TEST_UC_HALT;
 
     // save values in buffer
     DLOG_GEN_update();

@@ -16,7 +16,8 @@
 #define     PWM_DEBUG       DEBUG_STOP
 
 // timer period (in CPU cycles)
-#define     PWM_PERIOD      (CPU_FREQ/(SAMPLE_FREQ * SAMP_PRESCALE))
+#define     PWM_PERIOD      		(CPU_FREQ/(SAMPLE_FREQ * SAMP_PRESCALE))
+#define		PWM_PHASE_PERIOD		(CPU_FREQ/PHASE_FREQ)
 
 // prescaler for interrupt
 #define     PWM_INT_PSCL    SAMP_PRESCALE
