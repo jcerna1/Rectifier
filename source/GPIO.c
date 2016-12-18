@@ -75,39 +75,39 @@ void GPIO_Init(void)
 
 		//PH_L1
 		GpioCtrlRegs.GPAPUD.bit.GPIO1 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO1 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO1 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO1 = 1; // PIN 21 selected as ePWM1B output
 		GpioCtrlRegs.GPADIR.bit.GPIO1 = 1; // output mode
+
 
 		//PH_L2
 		GpioCtrlRegs.GPAPUD.bit.GPIO3 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO3 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO3 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO3 = 1; // PIN 23 selected as ePWM2B output
 		GpioCtrlRegs.GPADIR.bit.GPIO3 = 1; // output mode
+
 
 		//PH_L3
 		GpioCtrlRegs.GPAPUD.bit.GPIO5 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO5 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO5 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO5 = 1; // PIN 15 selected as ePWM3B output
 		GpioCtrlRegs.GPADIR.bit.GPIO5 = 1; // output mode
+
 
 		//PH_H1
 		GpioCtrlRegs.GPAPUD.bit.GPIO0 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO0 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO0 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO0 = 1; // PIN 17 selected as ePWM1A output
 		GpioCtrlRegs.GPADIR.bit.GPIO0 = 1; // output mode
+
 
 		//PH_H2
 		GpioCtrlRegs.GPAPUD.bit.GPIO2 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO2 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO2 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO2 = 1; // PIN 27 selected as ePWM2A output
 		GpioCtrlRegs.GPADIR.bit.GPIO2 = 1; // output mode
+
 
 		//PH_H3
 		GpioCtrlRegs.GPAPUD.bit.GPIO4 = 1; // Disable pullup
-		GpioDataRegs.GPASET.bit.GPIO4 = 1; // Load output latch
-		GpioCtrlRegs.GPAMUX1.bit.GPIO4 = 0; //Selected as a GPIO
+		GpioCtrlRegs.GPAMUX1.bit.GPIO4 = 1; // PIN 19 selected as ePWM3A output
 		GpioCtrlRegs.GPADIR.bit.GPIO4 = 1; // output mode
+
 
 		//LED_R
 		GpioCtrlRegs.GPAPUD.bit.GPIO12 = 1; // Disable pullup

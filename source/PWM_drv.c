@@ -32,8 +32,8 @@ void PWM_init(void)
 	EPwm1Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
 	EPwm1Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm1Regs.DBFED = 50; // FED = 50 TBCLKs
-	EPwm1Regs.DBRED = 50; // RED = 50 TBCLKs
+	EPwm1Regs.DBFED = 20; // FED = 20 TBCLKs
+	EPwm1Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 2
@@ -54,8 +54,8 @@ void PWM_init(void)
 	EPwm2Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
 	EPwm2Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm2Regs.DBFED = 50; // FED = 50 TBCLKs
-	EPwm2Regs.DBRED = 50; // RED = 50 TBCLKs
+	EPwm2Regs.DBFED = 20; // FED = 20 TBCLKs
+	EPwm2Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 3
@@ -65,7 +65,7 @@ void PWM_init(void)
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
 	EPwm3Regs.TBCTL.bit.PHSDIR = TB_UP; // count UP on sync (= 120 deg)
 	EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
-	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // sync flow-through
+	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // send sync signal to PWM4 when CTR=0
 	EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
 	EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
 	EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
@@ -76,8 +76,8 @@ void PWM_init(void)
 	EPwm3Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
 	EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm3Regs.DBFED = 50; // FED = 50 TBCLKs
-	EPwm3Regs.DBRED = 50; // RED = 50 TBCLKs
+	EPwm3Regs.DBFED = 20; // FED = 20 TBCLKs
+	EPwm3Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 4
@@ -104,17 +104,6 @@ void PWM_init(void)
     EPwm4Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
     EPwm4Regs.TBCTL.bit.FREE_SOFT = 3;  // run free
     #endif
-    
-    // Compare registers
-    EPwm4Regs.CMPA.half.CMPA = PWM_PERIOD/4;                 //50% duty cycle
-
-    // Init Action Qualifier Output A Register 
-    EPwm4Regs.AQCTLA.bit.CAU = AQ_CLEAR;  // clear output on CMPA_UP
-    EPwm4Regs.AQCTLA.bit.CAD = AQ_SET;    // set output on CMPA_DOWN
-
-    // Dead Time
-    
-    // Trip zone 
 
     // Event trigger
     // Proženje ADC-ja
@@ -128,9 +117,7 @@ void PWM_init(void)
     EPwm4Regs.ETCLR.bit.INT = 1;                // clear possible flag
     EPwm4Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
  
-// output pin setup
-
-}   //end of PWM_PWM_init
+}   //end of PWM_init
 
 /**************************************************************
 * Function for choosing correct transistor combination, depending
@@ -223,6 +210,9 @@ void PWM_start(void)
 {
     EALLOW;
     SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 0;
+    EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
+    EPwm2Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
+    EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
     EPwm4Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;  //up-down-count mode
     SysCtrlRegs.PCLKCR0.bit.TBCLKSYNC = 1;
     EDIS;

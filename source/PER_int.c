@@ -90,8 +90,7 @@ void interrupt PER_int(void)
 	// pin toggling to test interrupt frequency
 	GPIO_Toggle(GPIO_LED_Y); //toggle pin #24 - Yellow LED
 
-	__asm ("      ESTOP0");
-	TEST_UC_HALT;
+	//TEST_UC_HALT;
 
     // save values in buffer
     DLOG_GEN_update();
