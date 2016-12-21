@@ -16,7 +16,9 @@
 void PWM_init(void)
 {
 //EPWM Module 1
-	EPwm1Regs.TBPRD = PWM_PHASE_PERIOD/2; // set frequency (Tpwm=2*TBPRD*Ttbclk)
+	EPwm1Regs.TBPRD = PWM_PHASE_PERIOD/4; // set frequency (Tpwm=2*TBPRD*Ttbclk)
+	EPwm1Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
+	EPwm1Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm1Regs.TBPHS.half.TBPHS = 0; // set phase register to 0
 	EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm1Regs.TBCTL.bit.PHSEN = TB_DISABLE; // master module
@@ -37,8 +39,10 @@ void PWM_init(void)
 
 
 //EPWM Module 2
-	EPwm2Regs.TBPRD = PWM_PHASE_PERIOD/2; // set frequency (Tpwm=2*TBPRD*Ttbclk)
-	EPwm2Regs.TBPHS.half.TBPHS = PWM_PHASE_PERIOD/3; // phase delay by 120 deg
+	EPwm2Regs.TBPRD = PWM_PHASE_PERIOD/4; // set frequency (Tpwm=2*TBPRD*Ttbclk)
+	EPwm2Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
+	EPwm2Regs.CMPB = PWM_PHASE_PERIOD/8;
+	EPwm2Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/2)/3; // phase delay by 120 deg
 	EPwm2Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm2Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
 	EPwm2Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync (= 120 deg)
@@ -59,8 +63,10 @@ void PWM_init(void)
 
 
 //EPWM Module 3
-	EPwm3Regs.TBPRD = PWM_PHASE_PERIOD/2; // set frequency (Tpwm=2*TBPRD*Ttbclk)
-	EPwm3Regs.TBPHS.half.TBPHS = (2*PWM_PHASE_PERIOD)/3; // phase delay by 240 deg
+	EPwm3Regs.TBPRD = PWM_PHASE_PERIOD/4; // set frequency (Tpwm=2*TBPRD*Ttbclk)
+	EPwm3Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/2)/3;; // phase delay by 240 deg
+	EPwm3Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
+	EPwm3Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
 	EPwm3Regs.TBCTL.bit.PHSDIR = TB_UP; // count UP on sync (= 120 deg)
