@@ -8,11 +8,11 @@
 #include    "IQmathLib.h"
 
 
-// PWM frequency
+// PWM (interrupt) frequency
 #define     SWITCH_FREQ     40000
 
 // Phase frequency
-#define		PHASE_FREQ		1000
+#define		PHASE_FREQ		600
 
 // prescaler
 #define   	SAMP_PRESCALE   1
@@ -23,8 +23,8 @@
 // sample period
 #define     SAMPLE_TIME     (1.0/SAMPLE_FREQ)
 
-// electrical power grid frequency (Hz)
-#define		GRID_FREQ       50
+// number of samples within one period
+#define		SAMPLES			40
 
 // CPU frequency (Hz)
 #define     CPU_FREQ        80000000

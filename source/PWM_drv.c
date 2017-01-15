@@ -184,7 +184,7 @@ void PWM_period(float perioda)
 * return: void
 * arg1: desired frequency
 **************************************************************/
-void PWM_frequency(float frekvenca)
+void PWM4_frequency(float frekvenca)
 {
     // variables
     float   temp_tbper;
@@ -208,6 +208,31 @@ void PWM_frequency(float frekvenca)
     EPwm4Regs.TBPRD = celi_del - 1;
 }   //end of FB_frequency
   
+void PWM1_frequency(float frekvenca)
+{
+    // variables
+    float   temp_tbper;
+    static float ostanek = 0;
+    long celi_del;
+
+    // calculate TBPER (CPU_FREQ / SAMPLING_FREQ) - 1
+    temp_tbper = ((CPU_FREQ/frekvenca)/4.0);
+
+    // separate integer and remainder
+    celi_del = (long)temp_tbper;
+    ostanek = temp_tbper - celi_del;
+    // increase integer, in case remainder is bigger than 1
+    if (ostanek > 1.0)
+    {
+        ostanek = ostanek - 1.0;
+        celi_del = celi_del + 1;
+    }
+
+    // set TBPER
+    EPwm1Regs.TBPRD = celi_del - 1;
+    //TEST_UC_HALT;
+}   //end of FB_frequency
+
 /**************************************************************
 * Function for starting PWM4. Inside count mode can be set.
 * return: void

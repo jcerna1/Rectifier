@@ -6,8 +6,9 @@
 #include    "TIC_toc.h"
 #include	"math.h"
 #include 	"GPIO.h"
+#include 	"define.h"
 
-//for ADC variables
+//ADC variables
 int F1 = 0;
 int F2 = 0;
 int F3 = 0;
@@ -33,6 +34,19 @@ float u_faza3_offset = 0.022075010;
 float u_dc_gain = 0.004429593;
 float u_dc_offset = 0.014512117;
 
+//PLL/PI variables
+float PI_out = 0.0; //PI regulator output frequency [Hz]
+float previous_voltage = 0.0; //phase 1 voltage from previous interrupt
+float current_voltage = 0.0; //current phase 1 voltage
+float phase_shift = 0.0; //phase shift value
+float previous_error = 0.0; //PI regulator error from previous interrupt
+float current_error = 0.0; //current PI regulator error
+float P = 0.0; //proportional term of PI regulator
+float I = 0.0; //integral term of I regulator
+float Kp = 5.0; //proportional coefficient value
+float Ki = 1.0; //integral coefficient value
+float sample_ctr = 0; //sample counter
+
 // CPU load evaluation
 float   cpu_load  = 0.0;
 long    interrupt_cycles = 0;
@@ -41,15 +55,14 @@ long    interrupt_cycles = 0;
 int interrupt_overflow_counter = 0;
 
 /**************************************************************
-* variables for synchronization
-**************************************************************/
-
-/**************************************************************
  * Interrupt for regulation
  **************************************************************/
 #pragma CODE_SECTION(PER_int, "ramfuncs");
 void interrupt PER_int(void)
 {
+	/* local variables */
+	int positive_edge = 0; //assume there is no positive edge at the beginning of the interrupt
+
     // acknowledge interrupt:
     // Clear INT flag - ePWM4
     EPwm4Regs.ETCLR.bit.INT = 1;
@@ -66,12 +79,10 @@ void interrupt PER_int(void)
     // wait for the ADC to finish conversion
     ADC_wait();
 
-    // INTERRUPT CODE HERE
-    // INTERRUPT CODE HERE
-    // INTERRUPT CODE HERE
+    /*****************************************************************
+    * Calculation of voltages and currents from raw ADC data
+    *****************************************************************/
 
-
-	// ADC calibration testing
     F1 = U_FAZA1;
     F2 = U_FAZA2;
     F3 = U_FAZA3;
@@ -87,10 +98,40 @@ void interrupt PER_int(void)
 	adc_pot1 = ADC_POT1/4095.0;
 	adc_pot2 = ADC_POT2/4095.0;
 
-	// pin toggling to test interrupt frequency
-	GPIO_Toggle(GPIO_LED_Y); //toggle pin #24 - Yellow LED
+	/*****************************************************************
+	* Calculation of a new PWM4 (interrupt) frequency
+	*****************************************************************/
+	previous_voltage = current_voltage; //save current voltage as previous voltage for next iteration
+	current_voltage = u_faza1; //set phase 1 voltage as current voltage
 
+	if ((previous_voltage < 0.1) && (current_voltage >= 0.1)) { //detect positive edge
+		positive_edge = 1; //positive edge detected
+		phase_shift = (((sample_ctr-(SAMPLES/2))*PI))/(SAMPLES/2); //calculate phase shift
+		//range from -PI to +PI
+	}
+
+	if (positive_edge) { //if positive edge was detected, start regulation algorithm
+		previous_error = current_error; //save current error
+		current_error = 0 - phase_shift; //calculate current error
+		//PI REGULATION
+		P = current_error; //proportional term: current error
+		I += previous_error; //integral term: sum of previous errors
+		PI_out = Kp*P + Ki*I; //PI regulator output frequency
+		if (PI_out > 200) PI_out = 200; //upper limit of PI output
+		if (PI_out < -200) PI_out = -200; //lower limit of PI output
+	}
+
+	//set new PWM4 (interrupt) frequency in Hz
+	//PWM4_frequency((600+PI_out));
+	PWM1_frequency((600+PI_out));
+	//PWM1_frequency(1000);
 	//TEST_UC_HALT;
+
+	//internal sample counter
+	sample_ctr = sample_ctr + 1; //increment current sample number by 1
+	if (sample_ctr == SAMPLES) {
+		sample_ctr = 0; //reset sample counter when it reaches SAMPLES value
+	}
 
     // save values in buffer
     DLOG_GEN_update();
