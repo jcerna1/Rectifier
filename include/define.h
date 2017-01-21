@@ -8,11 +8,11 @@
 #include    "IQmathLib.h"
 
 
-// PWM (interrupt) frequency
-#define     SWITCH_FREQ     40000
-
 // Phase frequency
 #define		PHASE_FREQ		600
+
+// PWM (interrupt) frequency
+#define     SWITCH_FREQ     (PHASE_FREQ*40) //24000Hz
 
 // prescaler
 #define   	SAMP_PRESCALE   1

@@ -57,9 +57,8 @@ extern void PWM_period(float perioda);
 * return: void
 * arg1: desired frequency
 **************************************************************/
-extern void PWM4_frequency(float frekvenca);
+extern void PWM_frequency(float frekvenca);
 
-extern void PWM1_frequency(float frekvenca);
 
 #endif  // end of __PWM_DRV_H__ definition
 

@@ -43,8 +43,8 @@ float previous_error = 0.0; //PI regulator error from previous interrupt
 float current_error = 0.0; //current PI regulator error
 float P = 0.0; //proportional term of PI regulator
 float I = 0.0; //integral term of I regulator
-float Kp = 5.0; //proportional coefficient value
-float Ki = 1.0; //integral coefficient value
+float Kp = 1000.0; //proportional coefficient value
+float Ki = 100.0; //integral coefficient value
 float sample_ctr = 0; //sample counter
 
 // CPU load evaluation
@@ -104,7 +104,7 @@ void interrupt PER_int(void)
 	previous_voltage = current_voltage; //save current voltage as previous voltage for next iteration
 	current_voltage = u_faza1; //set phase 1 voltage as current voltage
 
-	if ((previous_voltage < 0.1) && (current_voltage >= 0.1)) { //detect positive edge
+	if ((previous_voltage < 7.5) && (current_voltage >= 7.5)) { //detect positive edge
 		positive_edge = 1; //positive edge detected
 		phase_shift = (((sample_ctr-(SAMPLES/2))*PI))/(SAMPLES/2); //calculate phase shift
 		//range from -PI to +PI
@@ -117,14 +117,13 @@ void interrupt PER_int(void)
 		P = current_error; //proportional term: current error
 		I += previous_error; //integral term: sum of previous errors
 		PI_out = Kp*P + Ki*I; //PI regulator output frequency
-		if (PI_out > 200) PI_out = 200; //upper limit of PI output
-		if (PI_out < -200) PI_out = -200; //lower limit of PI output
+		if (PI_out > 4000) PI_out = 4000; //upper limit of PI output
+		if (PI_out < -4000) PI_out = -4000; //lower limit of PI output
 	}
 
 	//set new PWM4 (interrupt) frequency in Hz
-	//PWM4_frequency((600+PI_out));
-	PWM1_frequency((600+PI_out));
-	//PWM1_frequency(1000);
+	//PWM_frequency((24000+PI_out));
+	PWM_frequency(14000+PI_out);
 	//TEST_UC_HALT;
 
 	//internal sample counter

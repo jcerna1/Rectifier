@@ -184,31 +184,8 @@ void PWM_period(float perioda)
 * return: void
 * arg1: desired frequency
 **************************************************************/
-void PWM4_frequency(float frekvenca)
-{
-    // variables
-    float   temp_tbper;
-    static float ostanek = 0;
-    long celi_del;
 
-    // calculate TBPER (CPU_FREQ / SAMPLING_FREQ) - 1
-    temp_tbper = (CPU_FREQ/2) / frekvenca;
-
-    // separate integer and remainder
-    celi_del = (long)temp_tbper;
-    ostanek = temp_tbper - celi_del;
-    // increase integer, in case remainder is bigger than 1
-    if (ostanek > 1.0)
-    {
-        ostanek = ostanek - 1.0;
-        celi_del = celi_del + 1;
-    }
-    
-    // set TBPER
-    EPwm4Regs.TBPRD = celi_del - 1;
-}   //end of FB_frequency
-  
-void PWM1_frequency(float frekvenca)
+void PWM_frequency(float frekvenca)
 {
     // variables
     float   temp_tbper;
@@ -229,7 +206,10 @@ void PWM1_frequency(float frekvenca)
     }
 
     // set TBPER
-    EPwm1Regs.TBPRD = celi_del - 1;
+    EPwm1Regs.TBPRD = (celi_del - 1)*40; //phase 1 frequency
+    EPwm2Regs.TBPRD = (celi_del - 1)*40; //phase 2 frequency
+    EPwm3Regs.TBPRD = (celi_del - 1)*40; //phase 3 frequency
+    EPwm4Regs.TBPRD = celi_del - 1; //interrupt frequency
     //TEST_UC_HALT;
 }   //end of FB_frequency
 
