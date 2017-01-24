@@ -8,9 +8,9 @@
 // type of element to buffer
 #define     DLOG_GEN_TYPE   float
 // number of channels
-#define     DLOG_GEN_NR     4
+#define     DLOG_GEN_NR     2
 // size of each buffer
-#define     DLOG_GEN_SIZE   512
+#define     DLOG_GEN_SIZE   200
 
 // function prototype
 void DLOG_GEN_update(void);

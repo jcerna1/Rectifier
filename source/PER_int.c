@@ -169,16 +169,16 @@ void PER_int_setup(void)
     EPwm4Regs.ETSEL.bit.INTEN = 1;              // enable interrupt
 
     // Data logger initialization
-    dlog.trig_value = 0;    			   // specify trigger value
-    dlog.slope = Positive;                 // trigger on positive slope
+    dlog.trig_value = 20;    			   // specify trigger value
+    dlog.slope = Negative;                 // trigger on positive slope
     dlog.prescalar = 1;                    // store every  sample
     dlog.mode = Normal;                    // Normal trigger mode
     dlog.auto_time = 100;                  // number of calls to update function
     dlog.holdoff_time = 100;               // number of calls to update function
 
-    //dlog.trig = &napetost;
-    //dlog.iptr1 = &napetost;
-    //dlog.iptr2 = &tok;
+    dlog.trig = &sample_ctr;
+    dlog.iptr1 = &sample_ctr;
+    dlog.iptr2 = &u_faza1;
 
 
     // acknowledge interrupt
