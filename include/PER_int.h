@@ -14,6 +14,7 @@
 #include    "PWM_drv.h"
 #include    "ADC_drv.h"
 #include    "math.h"
+#include	"CAP_drv.h"
 
 #include    "DLOG_gen.h"
 

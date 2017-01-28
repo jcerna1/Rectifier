@@ -17,4 +17,6 @@
 #include    "PWM_drv.h"
 #include    "ADC_drv.h"
 
+#include	"CAP_drv.h"
+
 #endif // end of __MAIN_H__ definition

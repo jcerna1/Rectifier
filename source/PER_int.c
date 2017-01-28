@@ -24,6 +24,9 @@ float i_dc = 0.0; //DC output current [A]
 float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
+//eCAP period
+float eCAP_period = 0.0;
+
 //GAIN/OFFSET values
 float u_faza1_gain = 0.004474398;
 float u_faza1_offset = 0.012685033;
@@ -131,6 +134,10 @@ void interrupt PER_int(void)
 	if (sample_ctr == SAMPLES) {
 		sample_ctr = 0; //reset sample counter when it reaches SAMPLES value
 	}
+
+	//find eCAP period value
+	eCAP_period = CAP_period(); //eCAP period in seconds
+	TEST_UC_HALT;
 
     // save values in buffer
     DLOG_GEN_update();

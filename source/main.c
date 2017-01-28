@@ -28,6 +28,9 @@ void main(void)
     // basic vector table
     InitPieVectTable();
 
+    // eCAP initialization
+    CAP_init();
+
     // ADC & PWM initialization
     ADC_init();
     PWM_init();
