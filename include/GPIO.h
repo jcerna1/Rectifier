@@ -29,7 +29,7 @@
  * PH1_HI  17            A          0           Output
  * PH2_HI  27            A          2           Output
  * PH3_HI  19            A          4           Output
- * LED_R   26            A          12          Output
+ * LED_R    8            A          12          Output
  * LED_G   20            A          17          Output
  * LED_Y   24            A          16          Output
  * SW1     30            B          34          Input
@@ -69,13 +69,13 @@
 extern void GPIO_Init(void);
 
 //Used to set the signalName GPIO output to high state in one operation. No stack operations due to function call.
-inline void GPIO_Set(Uint32 u32SignalMask)
+extern inline void GPIO_Set(Uint32 u32SignalMask)
 {
 	GpioDataRegs.GPASET.all |= u32SignalMask;
 }
 
 // Used to clear the signalName GPIO output to low state in one operation. No stack operations due to function call.
-inline void GPIO_Clear(Uint32 u32SignalMask)
+extern inline void GPIO_Clear(Uint32 u32SignalMask)
 {
 	GpioDataRegs.GPACLEAR.all |= u32SignalMask;
 }

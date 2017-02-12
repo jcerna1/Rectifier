@@ -59,6 +59,12 @@ extern void PWM_period(float perioda);
 **************************************************************/
 extern void PWM_frequency(float frekvenca);
 
+/**************************************************************
+* Function for continuous software forcing of PWM 1,2,3 outputs to LOW.
+* Used before synchronization is completed.
+* return: void
+**************************************************************/
+extern void PWM_forceLOW(void);
 
 #endif  // end of __PWM_DRV_H__ definition
 

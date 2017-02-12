@@ -24,8 +24,13 @@ float i_dc = 0.0; //DC output current [A]
 float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
-//eCAP period
+//synchronization variables
 float eCAP_period = 0.0;
+int synchronization = 0;
+int periods = 20; //number of periods to check for a phase shift
+double phase_shifts[] = {5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0};
+int shifts_index = 0;
+double shift_treshold = 0.2;
 
 //GAIN/OFFSET values
 float u_faza1_gain = 0.004474398;
@@ -114,19 +119,44 @@ void interrupt PER_int(void)
 	}
 
 	if (positive_edge) { //if positive edge was detected, start regulation algorithm
+		phase_shifts[shifts_index] = phase_shift; //store current phase shift in an array
+		shifts_index = shifts_index + 1; //increment shifts array index by 1
+		if (shifts_index == periods) { //when shifts array index reaches periods number, reset to 0
+			shifts_index = 0;
+		}
 		previous_error = current_error; //save current error
 		current_error = 0 - phase_shift; //calculate current error
 		//PI REGULATION
 		P = current_error; //proportional term: current error
 		I += previous_error; //integral term: sum of previous errors
 		PI_out = Kp*P + Ki*I; //PI regulator output frequency
-		if (PI_out > 4000) PI_out = 4000; //upper limit of PI output
-		if (PI_out < -4000) PI_out = -4000; //lower limit of PI output
+		if (PI_out > 8000) PI_out = 8000; //upper limit of PI output
+		if (PI_out < -8000) PI_out = -8000; //lower limit of PI output
 	}
 
+	if (synchronization == 0) { //if not synchronized yet, check shifts array
+		synchronization = 1; //assume we are synchronized before checking array
+		int i; //loop counter
+		for (i=0; i<20; i++) {
+			if (fabs(phase_shifts[i]) > shift_treshold) { //if we detect higher phase shift than
+				synchronization = 0;				//treshold, sychronization did not happen yet
+				break;
+			}
+		}
+
+	}
+
+	if (synchronization == 1) { //if synchronization successful
+		//asm(" ESTOP0");
+	}
+
+	//find eCAP period value
+	eCAP_period = CAP_period(); //eCAP period in seconds
+	eCAP_period = ((1/eCAP_period)*SAMPLES); //calculation of PWM4 frequency
+	//SET FREQUENCY AS PWM_frequency((1/eCAP_period)*SAMPLES);
 	//set new PWM4 (interrupt) frequency in Hz
-	//PWM_frequency((24000+PI_out));
-	PWM_frequency(14000+PI_out);
+	//PWM_frequency(16000+PI_out); //PWM4 frequency = 40x phase frequency (PWM123)
+	PWM_frequency(16000); //PWM4 frequency = 40x phase frequency (PWM123)
 	//TEST_UC_HALT;
 
 	//internal sample counter
@@ -135,12 +165,8 @@ void interrupt PER_int(void)
 		sample_ctr = 0; //reset sample counter when it reaches SAMPLES value
 	}
 
-	//find eCAP period value
-	eCAP_period = CAP_period(); //eCAP period in seconds
-	TEST_UC_HALT;
-
     // save values in buffer
-    DLOG_GEN_update();
+    //DLOG_GEN_update();
 
     /* check for interrupt while this interrupt is running -
      * if true, there is something wrong - if we count 10 such

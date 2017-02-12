@@ -3,6 +3,7 @@
 * DESCRIPTION:  A/D in PWM driver for TMS320F2808
 ****************************************************************/
 #include "PWM_drv.h"
+#include "GPIO.h"
 
 
 
@@ -229,6 +230,31 @@ void PWM_start(void)
     EDIS;
     
 }   //end of AP_PWM_start
+
+/**************************************************************
+* Function for continuous software forcing of PWM 1,2,3 outputs to LOW.
+* Used before synchronization is completed.
+* return: void
+**************************************************************/
+
+void PWM_forceLOW(void) {
+	DINT; //disable interrupts
+	EPwm1Regs.AQCSFRC.bit.CSFA = 1; //PWM 1, output A = LOW
+	EPwm1Regs.AQCSFRC.bit.CSFB = 1; //PWM 1, output B = LOW
+	EPwm2Regs.AQCSFRC.bit.CSFA = 1; //PWM 2, output A = LOW
+	EPwm2Regs.AQCSFRC.bit.CSFB = 1; //PWM 2, output B = LOW
+	EPwm3Regs.AQCSFRC.bit.CSFA = 1; //PWM 3, output A = LOW
+	EPwm3Regs.AQCSFRC.bit.CSFB = 1; //PWM 3, output B = LOW
+	GPIO_Set(GPIO_LED_R); //turn ON RED LED
+	GPIO_Set(GPIO_LED_G); //turn ON GREEN LED
+	GPIO_Set(GPIO_LED_Y); //turn ON YELLOW LED
+	while (GPIO_u8GetSW1() != GPIO_LOW) { //wait for SWITCH1 to continue
+
+	}
+	GPIO_Clear(GPIO_LED_R); //turn OFF RED LED
+	GPIO_Clear(GPIO_LED_G); //turn OFF GREEN LED
+	EINT; //enable interrupts
+}
 
 
 
