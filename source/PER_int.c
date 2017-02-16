@@ -65,7 +65,7 @@ int interrupt_overflow_counter = 0;
 /**************************************************************
  * Interrupt for regulation
  **************************************************************/
-#pragma CODE_SECTION(PER_int, "ramfuncs");
+#pragma CODE_SECTION(PER_int, "ramfuncs")
 void interrupt PER_int(void)
 {
 	/* local variables */
