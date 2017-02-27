@@ -13,7 +13,7 @@
 * signals are enabled.
 * return:void
 **************************************************************/
-//Ttbclk = 0.000000125
+//Ttbclk = 0.0000000125
 void PWM_init(void)
 {
 //EPWM Module 1
@@ -43,10 +43,10 @@ void PWM_init(void)
 	EPwm2Regs.TBPRD = PWM_PHASE_PERIOD/4; // set frequency (Tpwm=2*TBPRD*Ttbclk)
 	EPwm2Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
 	EPwm2Regs.CMPB = PWM_PHASE_PERIOD/8;
-	EPwm2Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/2)/3; // phase delay by 120 deg
+	EPwm2Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/4)/3; // phase delay by 120 deg
 	EPwm2Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm2Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
-	EPwm2Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync (= 120 deg)
+	EPwm2Regs.TBCTL.bit.PHSDIR = TB_UP; // count DOWN on sync (= 120 deg)
 	EPwm2Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm2Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // sync flow-through
 	EPwm2Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -65,7 +65,7 @@ void PWM_init(void)
 
 //EPWM Module 3
 	EPwm3Regs.TBPRD = PWM_PHASE_PERIOD/4; // set frequency (Tpwm=2*TBPRD*Ttbclk)
-	EPwm3Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/2)/3;; // phase delay by 240 deg
+	EPwm3Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/4)/3;; // phase delay by 240 deg
 	EPwm3Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
@@ -206,12 +206,26 @@ void PWM_frequency(float frekvenca)
         celi_del = celi_del + 1;
     }
 
-    // set TBPER
+    // set TBPER - period
     EPwm1Regs.TBPRD = (celi_del - 1)*40; //phase 1 frequency
     EPwm2Regs.TBPRD = (celi_del - 1)*40; //phase 2 frequency
     EPwm3Regs.TBPRD = (celi_del - 1)*40; //phase 3 frequency
     EPwm4Regs.TBPRD = celi_del - 1; //interrupt frequency
     //TEST_UC_HALT;
+
+    // set TBPHS - phase shift
+    EPwm2Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/3;
+    EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
+
+    // set CMP - duty cycle
+    EPwm1Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
+    EPwm1Regs.CMPB = ((celi_del - 1)*40)/2;
+    EPwm2Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
+    EPwm2Regs.CMPB = ((celi_del - 1)*40)/2;
+    EPwm3Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
+    EPwm3Regs.CMPB = ((celi_del - 1)*40)/2;
+
+    // set
 }   //end of FB_frequency
 
 /**************************************************************

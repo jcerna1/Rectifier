@@ -25,12 +25,14 @@ float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
 //synchronization variables
+int valid_signal = 0;
+int eCAP_call = 0;
 float eCAP_period = 0.0;
 int synchronization = 0;
-int periods = 20; //number of periods to check for a phase shift
-double phase_shifts[] = {5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0};
-int shifts_index = 0;
+int phase_samples = 1000; //number of samples to check for a phase shift
+int samples_counter = 0;
 double shift_treshold = 0.2;
+float counter = 100000000000;
 
 //GAIN/OFFSET values
 float u_faza1_gain = 0.004474398;
@@ -59,17 +61,21 @@ float sample_ctr = 0; //sample counter
 float   cpu_load  = 0.0;
 long    interrupt_cycles = 0;
 
+// za opazovanje stevcev
+float	pwm_timer1 = 0;
+float	pwm_timer2 = 0;
+float	pwm_timer3 = 0;
+
 // interrupt overflow (timeout) counter
 int interrupt_overflow_counter = 0;
 
 /**************************************************************
  * Interrupt for regulation
  **************************************************************/
-#pragma CODE_SECTION(PER_int, "ramfuncs");
+#pragma CODE_SECTION(PER_int, "ramfuncs")
 void interrupt PER_int(void)
 {
 	/* local variables */
-	int positive_edge = 0; //assume there is no positive edge at the beginning of the interrupt
 
     // acknowledge interrupt:
     // Clear INT flag - ePWM4
@@ -107,23 +113,32 @@ void interrupt PER_int(void)
 	adc_pot2 = ADC_POT2/4095.0;
 
 	/*****************************************************************
+	* Checking for a valid signal & determining initial frequency
+	*****************************************************************/
+
+	eCAP_period = CAP_period(); //eCAP period in seconds
+	eCAP_period = ((1/eCAP_period)*SAMPLES); //calculation of PWM4 frequency
+	if ((eCAP_period > 12400) && (eCAP_period < 40000)) { //if PH1 frequency is in range 310Hz-1000Hz
+		valid_signal = 1;
+	}
+	else {
+		valid_signal = 0;
+	}
+
+	/*****************************************************************
 	* Calculation of a new PWM4 (interrupt) frequency
 	*****************************************************************/
+
 	previous_voltage = current_voltage; //save current voltage as previous voltage for next iteration
 	current_voltage = u_faza1; //set phase 1 voltage as current voltage
 
-	if ((previous_voltage < 7.5) && (current_voltage >= 7.5)) { //detect positive edge
-		positive_edge = 1; //positive edge detected
+	if ((valid_signal == 1) && (previous_voltage < 7.5) && (current_voltage >= 7.5)) { //detect positive edge
+		if (synchronization == 1) {
+			EPwm1Regs.TBCTL.bit.SWFSYNC = 1;
+			//asm(" ESTOP0");
+		}
 		phase_shift = (((sample_ctr-(SAMPLES/2))*PI))/(SAMPLES/2); //calculate phase shift
 		//range from -PI to +PI
-	}
-
-	if (positive_edge) { //if positive edge was detected, start regulation algorithm
-		phase_shifts[shifts_index] = phase_shift; //store current phase shift in an array
-		shifts_index = shifts_index + 1; //increment shifts array index by 1
-		if (shifts_index == periods) { //when shifts array index reaches periods number, reset to 0
-			shifts_index = 0;
-		}
 		previous_error = current_error; //save current error
 		current_error = 0 - phase_shift; //calculate current error
 		//PI REGULATION
@@ -132,32 +147,30 @@ void interrupt PER_int(void)
 		PI_out = Kp*P + Ki*I; //PI regulator output frequency
 		if (PI_out > 8000) PI_out = 8000; //upper limit of PI output
 		if (PI_out < -8000) PI_out = -8000; //lower limit of PI output
+		PWM_frequency(eCAP_period+PI_out); //PWM4 frequency = 40x phase frequency (PWM123)
 	}
 
-	if (synchronization == 0) { //if not synchronized yet, check shifts array
-		synchronization = 1; //assume we are synchronized before checking array
-		int i; //loop counter
-		for (i=0; i<20; i++) {
-			if (fabs(phase_shifts[i]) > shift_treshold) { //if we detect higher phase shift than
-				synchronization = 0;				//treshold, sychronization did not happen yet
-				break;
-			}
+	/*****************************************************************
+	* Continuous synchronization check
+	*****************************************************************/
+	if (fabs(phase_shift) < shift_treshold) { //compare current phase shift with treshold
+		if (samples_counter < phase_samples) { //
+			samples_counter = samples_counter + 1;
 		}
-
+		else {
+			synchronization = 1;
+		}
+	}
+	else { //if current phase shift is higher than treshold, sync is lost or not reached yet
+		synchronization = 0;
+		samples_counter = 0;
 	}
 
 	if (synchronization == 1) { //if synchronization successful
 		//asm(" ESTOP0");
 	}
 
-	//find eCAP period value
-	eCAP_period = CAP_period(); //eCAP period in seconds
-	eCAP_period = ((1/eCAP_period)*SAMPLES); //calculation of PWM4 frequency
-	//SET FREQUENCY AS PWM_frequency((1/eCAP_period)*SAMPLES);
-	//set new PWM4 (interrupt) frequency in Hz
-	//PWM_frequency(16000+PI_out); //PWM4 frequency = 40x phase frequency (PWM123)
-	PWM_frequency(16000); //PWM4 frequency = 40x phase frequency (PWM123)
-	//TEST_UC_HALT;
+
 
 	//internal sample counter
 	sample_ctr = sample_ctr + 1; //increment current sample number by 1
@@ -166,7 +179,11 @@ void interrupt PER_int(void)
 	}
 
     // save values in buffer
-    //DLOG_GEN_update();
+	pwm_timer1 = EPwm1Regs.TBCTR;
+	pwm_timer2 = EPwm2Regs.TBCTR;
+	pwm_timer3 = EPwm3Regs.TBCTR;
+
+    DLOG_GEN_update();
 
     /* check for interrupt while this interrupt is running -
      * if true, there is something wrong - if we count 10 such
@@ -211,7 +228,9 @@ void PER_int_setup(void)
 
     dlog.trig = &sample_ctr;
     dlog.iptr1 = &sample_ctr;
-    dlog.iptr2 = &u_faza1;
+    dlog.iptr2 = &pwm_timer1;
+    dlog.iptr3 = &pwm_timer2;
+    dlog.iptr4 = &pwm_timer3;
 
 
     // acknowledge interrupt

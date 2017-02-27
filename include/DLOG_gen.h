@@ -8,7 +8,7 @@
 // type of element to buffer
 #define     DLOG_GEN_TYPE   float
 // number of channels
-#define     DLOG_GEN_NR     2
+#define     DLOG_GEN_NR     4
 // size of each buffer
 #define     DLOG_GEN_SIZE   200
 

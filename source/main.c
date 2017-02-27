@@ -38,6 +38,9 @@ void main(void)
     // periodic interrupt initialization
     PER_int_setup();
 
+    // predem omogocimprekinitve pockam 100 ms, da se sistem ustali
+    DELAY_US(100000L);
+
     // enable interrupts
     EINT;
     ERTM;

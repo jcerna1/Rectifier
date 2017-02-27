@@ -85,18 +85,25 @@ SECTIONS
 /* CODE */
     .text: >        P_L78,           PAGE = 0
 
-    ramfuncs:       LOAD = P_L78,
+    ramfuncs:       {
+                        rts2800_fpu32_fast_supplement.lib<atan2_f32.obj>(.text)
+                        rts2800_fpu32_fast_supplement.lib<div_f32.obj>(.text)
+                        rts2800_fpu32_fast_supplement.lib<cos_f32.obj>(.text)
+                        rts2800_fpu32_fast_supplement.lib<sin_f32.obj>(.text)
+                        rts2800_fpu32_fast_supplement.lib<sqrt_f32.obj>(.text)
+                        rts2800_fpu32.lib<l_div.obj>(.text)
+                        *(ramfuncs)
+                        *(.TI.ramfunc)
+                        *(IQmath)
+                    }
+                    LOAD = P_L78,
                     LOAD_START(_RamfuncsLoadStart),
+                    LOAD_SIZE(_RamfuncsLoadSize),
                     LOAD_END(_RamfuncsLoadEnd),
                     RUN_START(_RamfuncsRunStart),
-                    PAGE = 0
-
-/* IQ MATH FUNCTIONS */
-    IQmath:         LOAD = P_L78,
-                    LOAD_START(_IQfuncsLoadStart),
-                    LOAD_END(_IQfuncsLoadEnd),
-                    RUN_START(_IQfuncsRunStart),
-                    PAGE = 0
+                    RUN_SIZE(_RamfuncsRunSize),
+                    RUN_END(_RamfuncsRunEnd),
+                    PAGE = 0, ALIGN(4)
 
 /* IQ MATH TABLES */
     IQmathTables: > IQTABLES,       PAGE = 0, type = NOLOAD
