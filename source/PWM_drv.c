@@ -22,7 +22,7 @@ void PWM_init(void)
 	EPwm1Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm1Regs.TBPHS.half.TBPHS = 0; // set phase register to 0
 	EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
-	EPwm1Regs.TBCTL.bit.PHSEN = TB_DISABLE; // master module
+	EPwm1Regs.TBCTL.bit.PHSEN = TB_ENABLE; // master module, PHSEN = 1 for SW SYNC
 	EPwm1Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // sync down-stream module
 	EPwm1Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
