@@ -23,20 +23,21 @@ void PWM_init(void)
 	EPwm1Regs.TBPHS.half.TBPHS = 0; // set phase register to 0
 	EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm1Regs.TBCTL.bit.PHSEN = TB_ENABLE; // master module, PHSEN = 1 for SW SYNC
+	EPwm1Regs.TBCTL.bit.PHSDIR = TB_UP;
 	EPwm1Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // sync down-stream module
-	EPwm1Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-	EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
-	EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm1Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	//EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	//EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
 	EPwm1Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM1A: incrementing - set
 	EPwm1Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
 	EPwm1Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM1B: incrementing - clear
 	EPwm1Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
-	EPwm1Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
-	EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm1Regs.DBFED = 20; // FED = 20 TBCLKs
-	EPwm1Regs.DBRED = 20; // RED = 20 TBCLKs
+	//EPwm1Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
+	//EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
+	//EPwm1Regs.DBFED = 20; // FED = 20 TBCLKs
+	//EPwm1Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 2
@@ -46,21 +47,21 @@ void PWM_init(void)
 	EPwm2Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/4)/3; // phase delay by 120 deg
 	EPwm2Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm2Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
-	EPwm2Regs.TBCTL.bit.PHSDIR = TB_UP; // count DOWN on sync (= 120 deg)
+	EPwm2Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync
 	EPwm2Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm2Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // sync flow-through
-	EPwm2Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-	EPwm2Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
-	EPwm2Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm2Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm2Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	//EPwm2Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	//EPwm2Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm2Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
 	EPwm2Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM2A: incrementing - set
 	EPwm2Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
 	EPwm2Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM2B: incrementing - clear
 	EPwm2Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
-	EPwm2Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
-	EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm2Regs.DBFED = 20; // FED = 20 TBCLKs
-	EPwm2Regs.DBRED = 20; // RED = 20 TBCLKs
+	//EPwm2Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
+	//EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
+	//EPwm2Regs.DBFED = 20; // FED = 20 TBCLKs
+	//EPwm2Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 3
@@ -70,21 +71,21 @@ void PWM_init(void)
 	EPwm3Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
-	EPwm3Regs.TBCTL.bit.PHSDIR = TB_UP; // count UP on sync (= 120 deg)
+	EPwm3Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync
 	EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // send sync signal to PWM4 when CTR=0
-	EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
-	EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
-	EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm3Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	//EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	//EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
+	//EPwm3Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
 	EPwm3Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM3A: incrementing - set
 	EPwm3Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
 	EPwm3Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM3B: incrementing - clear
 	EPwm3Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
-	EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
-	EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
-	EPwm3Regs.DBFED = 20; // FED = 20 TBCLKs
-	EPwm3Regs.DBRED = 20; // RED = 20 TBCLKs
+	//EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
+	//EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
+	//EPwm3Regs.DBFED = 20; // FED = 20 TBCLKs
+	//EPwm3Regs.DBRED = 20; // RED = 20 TBCLKs
 
 
 //EPWM Module 4
@@ -214,16 +215,18 @@ void PWM_frequency(float frekvenca)
     //TEST_UC_HALT;
 
     // set TBPHS - phase shift
-    EPwm2Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/3;
-    EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
+    EPwm1Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/2;
+    EPwm2Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/6;
+    EPwm3Regs.TBPHS.half.TBPHS = (5*((celi_del - 1)*40))/6;
 
     // set CMP - duty cycle
-    EPwm1Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
-    EPwm1Regs.CMPB = ((celi_del - 1)*40)/2;
-    EPwm2Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
-    EPwm2Regs.CMPB = ((celi_del - 1)*40)/2;
-    EPwm3Regs.CMPA.half.CMPA = ((celi_del - 1)*40)/2;
-    EPwm3Regs.CMPB = ((celi_del - 1)*40)/2;
+    EPwm1Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    EPwm1Regs.CMPB = (2*((celi_del - 1)*40))/6;
+    EPwm2Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    EPwm2Regs.CMPB = (2*((celi_del - 1)*40))/6;
+    EPwm3Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    EPwm3Regs.CMPB = (2*((celi_del - 1)*40))/6;
+    //asm(" ESTOP0");
 
     // set
 }   //end of FB_frequency
