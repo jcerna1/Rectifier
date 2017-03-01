@@ -71,7 +71,7 @@ void PWM_init(void)
 	EPwm3Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
-	EPwm3Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync
+	EPwm3Regs.TBCTL.bit.PHSDIR = TB_UP; // count UP on sync
 	EPwm3Regs.TBCTL.bit.PRDLD = TB_SHADOW;
 	EPwm3Regs.TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // send sync signal to PWM4 when CTR=0
 	//EPwm3Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;
@@ -216,8 +216,8 @@ void PWM_frequency(float frekvenca)
 
     // set TBPHS - phase shift
     EPwm1Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/2;
-    EPwm2Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/6;
-    EPwm3Regs.TBPHS.half.TBPHS = (5*((celi_del - 1)*40))/6;
+    EPwm2Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
+    EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
 
     // set CMP - duty cycle
     EPwm1Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
