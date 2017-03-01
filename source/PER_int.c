@@ -111,6 +111,9 @@ void interrupt PER_int(void)
 	i_dc = I_DC;
 	adc_pot1 = ADC_POT1/4095.0;
 	adc_pot2 = ADC_POT2/4095.0;
+	if (adc_pot1 > 0.95) { //duty cycle capping
+		adc_pot1 = 0.95;
+	}
 
 	/*****************************************************************
 	* Checking for a valid signal & determining initial frequency
@@ -148,6 +151,8 @@ void interrupt PER_int(void)
 		if (PI_out > 8000) PI_out = 8000; //upper limit of PI output
 		if (PI_out < -8000) PI_out = -8000; //lower limit of PI output
 		PWM_frequency(eCAP_period+PI_out); //PWM4 frequency = 40x phase frequency (PWM123)
+		PWM_duty(adc_pot1);
+		PWM_phase(adc_pot2);
 	}
 
 	/*****************************************************************

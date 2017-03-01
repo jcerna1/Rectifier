@@ -60,6 +60,22 @@ extern void PWM_period(float perioda);
 extern void PWM_frequency(float frekvenca);
 
 /**************************************************************
+* Function for setting duty cycle of PWM 1,2,3 for MOSFET
+* switching. Ratio (0.0-1.0) translates to angle (0-180).
+* return: void
+* arg1: desired ratio (0.0-1.0)
+**************************************************************/
+extern void PWM_duty(float ratio);
+
+/**************************************************************
+* Function for setting phase of PWM 1,2,3 for MOSFET
+* switching. Ratio (0.0-1.0) translates to angle (-90 .. +90).
+* return: void
+* arg1: desired ratio (0.0-1.0)
+**************************************************************/
+extern void PWM_phase(float ratio);
+
+/**************************************************************
 * Function for continuous software forcing of PWM 1,2,3 outputs to LOW.
 * Used before synchronization is completed.
 * return: void

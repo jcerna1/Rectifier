@@ -215,21 +215,57 @@ void PWM_frequency(float frekvenca)
     //TEST_UC_HALT;
 
     // set TBPHS - phase shift
-    EPwm1Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/2;
-    EPwm2Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
-    EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
+    //EPwm1Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/2;
+    //EPwm2Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
+    //EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
 
     // set CMP - duty cycle
-    EPwm1Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    EPwm1Regs.CMPB = (2*((celi_del - 1)*40))/6;
-    EPwm2Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    EPwm2Regs.CMPB = (2*((celi_del - 1)*40))/6;
-    EPwm3Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    EPwm3Regs.CMPB = (2*((celi_del - 1)*40))/6;
-    //asm(" ESTOP0");
+    //EPwm1Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    //EPwm1Regs.CMPB = (2*((celi_del - 1)*40))/6;
+    //EPwm2Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    //EPwm2Regs.CMPB = (2*((celi_del - 1)*40))/6;
+    //EPwm3Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
+    //EPwm3Regs.CMPB = (2*((celi_del - 1)*40))/6;
 
-    // set
-}   //end of FB_frequency
+    //asm(" ESTOP0");
+}
+
+/**************************************************************
+* Function for setting duty cycle of PWM 1,2,3 for MOSFET
+* switching. Ratio (0.0-1.0) translates to angle (0-180).
+* return: void
+* arg1: desired ratio (0.0-1.0)
+**************************************************************/
+void PWM_duty(float ratio) {
+    long period;
+    long CMPA;
+	long CMPB;
+    period = EPwm1Regs.TBPRD;
+    CMPA = period-((period/2)*ratio);
+    CMPB = (period/2)*ratio;
+    EPwm1Regs.CMPA.half.CMPA = CMPA;
+    EPwm1Regs.CMPB = CMPB;
+    EPwm2Regs.CMPA.half.CMPA = CMPA;
+    EPwm2Regs.CMPB = CMPB;
+    EPwm3Regs.CMPA.half.CMPA = CMPA;
+    EPwm3Regs.CMPB = CMPB;
+}
+
+/**************************************************************
+* Function for setting phase of PWM 1,2,3 for MOSFET
+* switching. Ratio (0.0-1.0) translates to angle (-90 .. +90).
+* return: void
+* arg1: desired ratio (0.0-1.0)
+**************************************************************/
+void PWM_phase(float ratio) {
+    long period;
+    long phase;
+    period = EPwm1Regs.TBPRD;
+    phase = period*ratio;
+    EPwm1Regs.TBPHS.half.TBPHS = phase;
+    EPwm2Regs.TBPHS.half.TBPHS = (2*(period))/3;
+	EPwm3Regs.TBPHS.half.TBPHS = (2*(period))/3;
+}
 
 /**************************************************************
 * Function for starting PWM4. Inside count mode can be set.
