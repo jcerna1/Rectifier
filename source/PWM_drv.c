@@ -214,9 +214,9 @@ void PWM_frequency(float frekvenca)
     }
 
     // set TBPER - period
-    EPwm1Regs.TBPRD = (celi_del - 1)*10; //phase 1 frequency
-    EPwm2Regs.TBPRD = (celi_del - 1)*10; //phase 2 frequency
-    EPwm3Regs.TBPRD = (celi_del - 1)*10; //phase 3 frequency
+    EPwm1Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 1 frequency
+    EPwm2Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 2 frequency
+    EPwm3Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 3 frequency
     EPwm4Regs.TBPRD = celi_del - 1; //interrupt frequency
     //TEST_UC_HALT;
 

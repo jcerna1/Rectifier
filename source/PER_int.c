@@ -25,7 +25,6 @@ float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
 //synchronization variables
-int sync = 1;
 int valid_signal = 0;
 int eCAP_call = 0;
 float eCAP_period = 0.0;
@@ -122,7 +121,7 @@ void interrupt PER_int(void)
 
 	eCAP_period = CAP_period(); //eCAP period in seconds
 	eCAP_period = ((1/eCAP_period)*SAMPLES); //calculation of PWM4 frequency
-	if ((eCAP_period > 12400) && (eCAP_period < 40000)) { //if PH1 frequency is in range 310Hz-1000Hz
+	if ((eCAP_period > (12000)) && (eCAP_period < (240000))) { //if PH1 frequency is in range 310Hz-1000Hz
 		valid_signal = 1;
 	}
 	else {
@@ -137,11 +136,8 @@ void interrupt PER_int(void)
 	current_voltage = u_faza1; //set phase 1 voltage as current voltage
 
 	if ((valid_signal == 1) && (previous_voltage < 7.5) && (current_voltage >= 7.5)) { //detect positive edge
-		//if ((synchronization == 1) && (sync == 1)) {
 		if (synchronization == 1) {
 			EPwm1Regs.TBCTL.bit.SWFSYNC = 1;
-			//sync = 0;
-			//asm(" ESTOP0");
 		}
 		phase_shift = (((sample_ctr-(SAMPLES/2))*PI))/(SAMPLES/2); //calculate phase shift
 		//range from -PI to +PI
@@ -172,7 +168,6 @@ void interrupt PER_int(void)
 	else { //if current phase shift is higher than treshold, sync is lost or not reached yet
 		synchronization = 0;
 		samples_counter = 0;
-		//sync = 1;
 	}
 
 	if (synchronization == 1) { //if synchronization successful

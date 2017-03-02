@@ -24,7 +24,7 @@
 #define     SAMPLE_TIME     (1.0/SAMPLE_FREQ)
 
 // number of samples within one period
-#define		SAMPLES			40
+#define		SAMPLES			100
 
 // CPU frequency (Hz)
 #define     CPU_FREQ        90000000
