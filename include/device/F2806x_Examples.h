@@ -27,7 +27,8 @@ extern "C" {
 #define DSP28_DIVSEL   2 // Enable /2 for SYSCLKOUT
 //#define DSP28_DIVSEL   3 // Enable /1 for SYSCLKOUT
 
-#define DSP28_PLLCR   16    // Uncomment for 80 MHz devices [80 MHz = (10MHz * 16)/2]
+#define DSP28_PLLCR   18    // Uncomment for 80 MHz devices [90 MHz = (10MHz * 18)/2]
+//#define DSP28_PLLCR   16    // Uncomment for 80 MHz devices [80 MHz = (10MHz * 16)/2]
 //#define DSP28_PLLCR   15
 //#define DSP28_PLLCR   14
 //#define DSP28_PLLCR   13
@@ -68,7 +69,8 @@ extern "C" {
                  Uncomment the line: #define CPU_RATE 12.500L
 
 -----------------------------------------------------------------------------*/
-#define CPU_RATE   12.500L   // for a 80MHz CPU clock speed (SYSCLKOUT)
+#define CPU_RATE   11.111L   // for a 90MHz CPU clock speed (SYSCLKOUT)
+//#define CPU_RATE   12.500L   // for a 80MHz CPU clock speed (SYSCLKOUT)
 //#define CPU_RATE   16.667L   // for a 60MHz CPU clock speed (SYSCLKOUT)
 //#define CPU_RATE   20.000L   // for a 50MHz CPU clock speed  (SYSCLKOUT)
 //#define CPU_RATE   25.000L   // for a 40MHz CPU clock speed  (SYSCLKOUT)

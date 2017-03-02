@@ -21,6 +21,8 @@ void PWM_init(void)
 	EPwm1Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
 	EPwm1Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm1Regs.TBPHS.half.TBPHS = 0; // set phase register to 0
+	EPwm1Regs.TBCTL.bit.CLKDIV = 2;
+	EPwm1Regs.TBCTL.bit.HSPCLKDIV = 0;
 	EPwm1Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm1Regs.TBCTL.bit.PHSEN = TB_ENABLE; // master module, PHSEN = 1 for SW SYNC
 	EPwm1Regs.TBCTL.bit.PHSDIR = TB_UP;
@@ -45,6 +47,8 @@ void PWM_init(void)
 	EPwm2Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
 	EPwm2Regs.CMPB = PWM_PHASE_PERIOD/8;
 	EPwm2Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/4)/3; // phase delay by 120 deg
+	EPwm2Regs.TBCTL.bit.CLKDIV = 2;
+	EPwm2Regs.TBCTL.bit.HSPCLKDIV = 0;
 	EPwm2Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm2Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
 	EPwm2Regs.TBCTL.bit.PHSDIR = TB_DOWN; // count DOWN on sync
@@ -69,6 +73,8 @@ void PWM_init(void)
 	EPwm3Regs.TBPHS.half.TBPHS = (PWM_PHASE_PERIOD/4)/3;; // phase delay by 240 deg
 	EPwm3Regs.CMPA.half.CMPA = PWM_PHASE_PERIOD/8;
 	EPwm3Regs.CMPB = PWM_PHASE_PERIOD/8;
+	EPwm3Regs.TBCTL.bit.CLKDIV = 2;
+	EPwm3Regs.TBCTL.bit.HSPCLKDIV = 0;
 	EPwm3Regs.TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN; // symmetrical up-down mode
 	EPwm3Regs.TBCTL.bit.PHSEN = TB_ENABLE; // slave module
 	EPwm3Regs.TBCTL.bit.PHSDIR = TB_UP; // count UP on sync
@@ -195,7 +201,7 @@ void PWM_frequency(float frekvenca)
     long celi_del;
 
     // calculate TBPER (CPU_FREQ / SAMPLING_FREQ) - 1
-    temp_tbper = ((CPU_FREQ/frekvenca)/4.0);
+    temp_tbper = ((CPU_FREQ/frekvenca)/2.0);
 
     // separate integer and remainder
     celi_del = (long)temp_tbper;
@@ -208,9 +214,9 @@ void PWM_frequency(float frekvenca)
     }
 
     // set TBPER - period
-    EPwm1Regs.TBPRD = (celi_del - 1)*40; //phase 1 frequency
-    EPwm2Regs.TBPRD = (celi_del - 1)*40; //phase 2 frequency
-    EPwm3Regs.TBPRD = (celi_del - 1)*40; //phase 3 frequency
+    EPwm1Regs.TBPRD = (celi_del - 1)*10; //phase 1 frequency
+    EPwm2Regs.TBPRD = (celi_del - 1)*10; //phase 2 frequency
+    EPwm3Regs.TBPRD = (celi_del - 1)*10; //phase 3 frequency
     EPwm4Regs.TBPRD = celi_del - 1; //interrupt frequency
     //TEST_UC_HALT;
 

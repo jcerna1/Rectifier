@@ -27,7 +27,7 @@
 #define		SAMPLES			40
 
 // CPU frequency (Hz)
-#define     CPU_FREQ        80000000
+#define     CPU_FREQ        90000000
 
 // mathematical constants
 #define		SQRT3			1.7320508075688772935274463415059
