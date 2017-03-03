@@ -25,6 +25,8 @@ float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
 
 //synchronization variables
+long CMPA = 0;
+long CMPB = 0;
 int valid_signal = 0;
 int eCAP_call = 0;
 float eCAP_period = 0.0;
@@ -114,6 +116,66 @@ void interrupt PER_int(void)
 	if (adc_pot1 > 0.95) { //duty cycle capping
 		adc_pot1 = 0.95;
 	}
+
+	/*****************************************************************
+	* Asynchronous software-forced triggering of the MOSFETs
+	*****************************************************************/
+	CMPA = EPwm1Regs.CMPA.half.CMPA;
+	CMPB = EPwm1Regs.CMPB;
+	if (EPwm1Regs.TBCTR < CMPA) { //if PWM1 counter less than CMPA
+		EPwm1Regs.AQCSFRC.bit.CSFA = 1; //turn EPWM1A OFF
+	}
+	else {
+		EPwm1Regs.AQCSFRC.bit.CSFA = 2; //turn EPWM1A ON
+	}
+	if (EPwm1Regs.TBCTR > CMPB) { //if PWM1 counter more than CMPB
+		EPwm1Regs.AQCSFRC.bit.CSFB = 1; //turn EPWM1B OFF
+	}
+	else {
+		EPwm1Regs.AQCSFRC.bit.CSFB = 2; //turn EPWM1B ON
+	}
+
+	if (EPwm2Regs.TBCTR < CMPA) { // ... same principle for PWM2 ...
+		EPwm2Regs.AQCSFRC.bit.CSFA = 1;
+	}
+	else {
+		EPwm2Regs.AQCSFRC.bit.CSFA = 2;
+	}
+	if (EPwm2Regs.TBCTR > CMPB) {
+		EPwm2Regs.AQCSFRC.bit.CSFB = 1;
+	}
+	else {
+		EPwm2Regs.AQCSFRC.bit.CSFB = 2;
+	}
+
+	if (EPwm3Regs.TBCTR < CMPA) { // ... and PWM3
+		EPwm3Regs.AQCSFRC.bit.CSFA = 1;
+	}
+	else {
+		EPwm3Regs.AQCSFRC.bit.CSFA = 2;
+	}
+	if (EPwm3Regs.TBCTR > CMPB) {
+		EPwm3Regs.AQCSFRC.bit.CSFB = 1;
+	}
+	else {
+		EPwm3Regs.AQCSFRC.bit.CSFB = 2;
+	}
+
+	/*CMPB1 = EPwm1Regs.CMPB;
+	CMPB2 = EPwm2Regs.CMPB;
+	if ((EPwm1Regs.TBSTS.bit.CTRDIR == 1)) {
+		EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_CTR_CMPB;
+	}
+	else {
+		EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	}*/
+	/*if ((EPwm2Regs.TBSTS.bit.CTRDIR == 1) && (EPwm2Regs.TBCTR > CMPB2)) {
+		EPwm2Regs.TBCTL.bit.SYNCOSEL = TB_CTR_CMPB;
+	}
+	else {
+		EPwm2Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	}*/
+	//asm(" ESTOP0");
 
 	/*****************************************************************
 	* Checking for a valid signal & determining initial frequency

@@ -32,10 +32,11 @@ void PWM_init(void)
 	//EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
 	//EPwm1Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
 	//EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm1Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM1A: incrementing - set
-	EPwm1Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
-	EPwm1Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM1B: incrementing - clear
-	EPwm1Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
+	EPwm1Regs.AQCTLA.bit.CAU = AQ_NO_ACTION; // set actions for EPWM1A: incrementing - set
+	EPwm1Regs.AQCTLA.bit.CAD = AQ_NO_ACTION; // decrementing - clear
+	EPwm1Regs.AQCTLB.bit.CBU = AQ_NO_ACTION; // set actions for EPWM1B: incrementing - clear
+	EPwm1Regs.AQCTLB.bit.CBD = AQ_NO_ACTION; // decrementing - set
+	EPwm1Regs.AQSFRC.bit.RLDCSF = 3;
 	//EPwm1Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	//EPwm1Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
 	//EPwm1Regs.DBFED = 20; // FED = 20 TBCLKs
@@ -58,10 +59,11 @@ void PWM_init(void)
 	//EPwm2Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
 	//EPwm2Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
 	//EPwm2Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm2Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM2A: incrementing - set
-	EPwm2Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
-	EPwm2Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM2B: incrementing - clear
-	EPwm2Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
+	EPwm2Regs.AQCTLA.bit.CAU = AQ_NO_ACTION; // set actions for EPWM2A: incrementing - set
+	EPwm2Regs.AQCTLA.bit.CAD = AQ_NO_ACTION; // decrementing - clear
+	EPwm2Regs.AQCTLB.bit.CBU = AQ_NO_ACTION; // set actions for EPWM2B: incrementing - clear
+	EPwm2Regs.AQCTLB.bit.CBD = AQ_NO_ACTION; // decrementing - set
+	EPwm2Regs.AQSFRC.bit.RLDCSF = 3;
 	//EPwm2Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	//EPwm2Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
 	//EPwm2Regs.DBFED = 20; // FED = 20 TBCLKs
@@ -84,10 +86,11 @@ void PWM_init(void)
 	//EPwm3Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;
 	//EPwm3Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO; // load on CTR=Zero
 	//EPwm3Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO; // load on CTR=Zero
-	EPwm3Regs.AQCTLA.bit.CAU = AQ_SET; // set actions for EPWM3A: incrementing - set
-	EPwm3Regs.AQCTLA.bit.CAD = AQ_CLEAR; // decrementing - clear
-	EPwm3Regs.AQCTLB.bit.CBU = AQ_CLEAR; // set actions for EPWM3B: incrementing - clear
-	EPwm3Regs.AQCTLB.bit.CBD = AQ_SET; // decrementing - set
+	EPwm3Regs.AQCTLA.bit.CAU = AQ_NO_ACTION; // set actions for EPWM3A: incrementing - set
+	EPwm3Regs.AQCTLA.bit.CAD = AQ_NO_ACTION; // decrementing - clear
+	EPwm3Regs.AQCTLB.bit.CBU = AQ_NO_ACTION; // set actions for EPWM3B: incrementing - clear
+	EPwm3Regs.AQCTLB.bit.CBD = AQ_NO_ACTION; // decrementing - set
+	EPwm3Regs.AQSFRC.bit.RLDCSF = 3;
 	//EPwm3Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE; // enable dead-band module
 	//EPwm3Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC; // Active Hi complementary
 	//EPwm3Regs.DBFED = 20; // FED = 20 TBCLKs
@@ -217,23 +220,8 @@ void PWM_frequency(float frekvenca)
     EPwm1Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 1 frequency
     EPwm2Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 2 frequency
     EPwm3Regs.TBPRD = (celi_del - 1)*(SAMPLES/4); //phase 3 frequency
-    EPwm4Regs.TBPRD = celi_del - 1; //interrupt frequency
+    EPwm4Regs.TBPRD = (celi_del - 1); //interrupt frequency
     //TEST_UC_HALT;
-
-    // set TBPHS - phase shift
-    //EPwm1Regs.TBPHS.half.TBPHS = ((celi_del - 1)*40)/2;
-    //EPwm2Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
-    //EPwm3Regs.TBPHS.half.TBPHS = (2*((celi_del - 1)*40))/3;
-
-    // set CMP - duty cycle
-    //EPwm1Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    //EPwm1Regs.CMPB = (2*((celi_del - 1)*40))/6;
-    //EPwm2Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    //EPwm2Regs.CMPB = (2*((celi_del - 1)*40))/6;
-    //EPwm3Regs.CMPA.half.CMPA = (4*((celi_del - 1)*40))/6;
-    //EPwm3Regs.CMPB = (2*((celi_del - 1)*40))/6;
-
-    //asm(" ESTOP0");
 }
 
 /**************************************************************
@@ -255,6 +243,17 @@ void PWM_duty(float ratio) {
     EPwm2Regs.CMPB = CMPB;
     EPwm3Regs.CMPA.half.CMPA = CMPA;
     EPwm3Regs.CMPB = CMPB;
+
+    //if ((EPwm1Regs.TBSTS.bit.CTRDIR == 0) && (EPwm1Regs.TBCTR > CMPB)) { //if counter is decreasing and is bigger than CMPB
+    //if (EPwm1Regs.TBSTS.bit.CTRDIR == 1) {
+    	//EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_CTR_CMPB;
+    	//TEST_UC_HALT;
+    	//EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+    //}
+    //else {
+    	//EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+    	//EPwm1Regs.TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+    //}
 }
 
 /**************************************************************
