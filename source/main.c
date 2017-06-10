@@ -45,11 +45,11 @@ void main(void)
     EINT;
     ERTM;
 
+    // force PWM 1,2,3 outputs to LOW
+    PWM_forceLOW();
+
     // start timer for ADC & interrupt triggering
     PWM_start();
-
-    // force PWM 1,2,3 outputs to LOW
-    //PWM_forceLOW();
 
     // go to infinite loop in background
     BACK_loop();

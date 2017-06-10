@@ -23,6 +23,10 @@ float u_dc = 0.0; //DC output voltage [V]
 float i_dc = 0.0; //DC output current [A]
 float adc_pot1 = 0.0; //potentiometer 1 position [0.0-1.0]
 float adc_pot2 = 0.0; //potentiometer 2 position [0.0-1.0]
+float DCpower = 0.0; //power of (rectified) DC output [W]
+float ACpower = 0.0; //AC power before rectification [W]
+float neutral = 0.0; //instantaneous neutral voltage
+float alpha = 0.000157067; //alpha value for low pass filter
 
 //synchronization variables
 long CMPA = 0;
@@ -43,8 +47,16 @@ float u_faza2_gain = 0.004417942;
 float u_faza2_offset = 0.024390625;
 float u_faza3_gain = 0.004421897;
 float u_faza3_offset = 0.022075010;
+float i_faza1_gain = 0.100363945;
+float i_faza1_offset = -202.474223129;
+float i_faza2_gain = 0.097303207;
+float i_faza2_offset = -197.038994169;
+float i_faza3_gain = 0.097599535;
+float i_faza3_offset = -197.463380009;
 float u_dc_gain = 0.004429593;
 float u_dc_offset = 0.014512117;
+float i_dc_gain = 0.095410094;
+float i_dc_offset = -25.284518524;
 
 //PLL/PI variables
 float PI_out = 0.0; //PI regulator output frequency [Hz]
@@ -98,23 +110,28 @@ void interrupt PER_int(void)
     /*****************************************************************
     * Calculation of voltages and currents from raw ADC data
     *****************************************************************/
-
-    F1 = U_FAZA1;
-    F2 = U_FAZA2;
-    F3 = U_FAZA3;
-    DC = U_DC;
 	u_faza1 = U_FAZA1*u_faza1_gain+u_faza1_offset;
 	u_faza2 = U_FAZA2*u_faza2_gain+u_faza2_offset;
 	u_faza3 = U_FAZA3*u_faza3_gain+u_faza3_offset;
-	i_faza1 = I_FAZA1;
-	i_faza2 = I_FAZA2;
-	i_faza3 = I_FAZA3;
+	i_faza1 = I_FAZA1*i_faza1_gain+i_faza1_offset;
+	i_faza2 = I_FAZA2*i_faza2_gain+i_faza2_offset;
+	i_faza3 = I_FAZA3*i_faza3_gain+i_faza3_offset;
 	u_dc = U_DC*u_dc_gain+u_dc_offset;
-	i_dc = I_DC;
-	adc_pot1 = ADC_POT1/4095.0;
-	adc_pot2 = ADC_POT2/4095.0;
-	if (adc_pot1 > 0.95) { //duty cycle capping
-		adc_pot1 = 0.95;
+	i_dc = I_DC*i_dc_gain+i_dc_offset;
+
+	/*****************************************************************
+	* Calculation of AC and DC power
+	*****************************************************************/
+	neutral = (u_faza1+u_faza2+u_faza3)/3.0; //calculation of instantaneous neutral voltage
+	ACpower = (alpha*(((u_faza1-neutral)*i_faza1)+((u_faza2-neutral)*i_faza2)+((u_faza3-neutral)*i_faza3)) + ((1-alpha)*ACpower)); //AC POWER
+	DCpower = (alpha*(u_dc*i_dc)) + ((1-alpha)*DCpower); //DC POWER
+	/*****************************************************************
+	 * Calculation of potentiometer relative position
+	 *****************************************************************/
+	adc_pot1 = ADC_POT1/4095.0; //potentiometer 1 for duty cycle setting
+	adc_pot2 = ADC_POT2/4095.0; //potentiometer 2 for phase setting
+	if (adc_pot1 > 0.66) { //duty cycle capping
+		adc_pot1 = 0.66;
 	}
 
 	/*****************************************************************
@@ -122,44 +139,51 @@ void interrupt PER_int(void)
 	*****************************************************************/
 	CMPA = EPwm1Regs.CMPA.half.CMPA;
 	CMPB = EPwm1Regs.CMPB;
-	if (EPwm1Regs.TBCTR < CMPA) { //if PWM1 counter less than CMPA
-		EPwm1Regs.AQCSFRC.bit.CSFA = 1; //turn EPWM1A OFF
-	}
-	else {
-		EPwm1Regs.AQCSFRC.bit.CSFA = 2; //turn EPWM1A ON
-	}
-	if (EPwm1Regs.TBCTR > CMPB) { //if PWM1 counter more than CMPB
-		EPwm1Regs.AQCSFRC.bit.CSFB = 1; //turn EPWM1B OFF
-	}
-	else {
-		EPwm1Regs.AQCSFRC.bit.CSFB = 2; //turn EPWM1B ON
-	}
+	if (synchronization == 1) {
+		if (EPwm1Regs.TBCTR < CMPA) { //if PWM1 counter less than CMPA
+			EPwm1Regs.AQCSFRC.bit.CSFA = 1; //turn EPWM1A OFF
+		}
+		else {
+			EPwm1Regs.AQCSFRC.bit.CSFA = 2; //turn EPWM1A ON
+		}
+		if (EPwm1Regs.TBCTR > CMPB) { //if PWM1 counter more than CMPB
+			EPwm1Regs.AQCSFRC.bit.CSFB = 1; //turn EPWM1B OFF
+		}
+		else {
+			EPwm1Regs.AQCSFRC.bit.CSFB = 2; //turn EPWM1B ON
+		}
 
-	if (EPwm2Regs.TBCTR < CMPA) { // ... same principle for PWM2 ...
-		EPwm2Regs.AQCSFRC.bit.CSFA = 1;
-	}
-	else {
-		EPwm2Regs.AQCSFRC.bit.CSFA = 2;
-	}
-	if (EPwm2Regs.TBCTR > CMPB) {
-		EPwm2Regs.AQCSFRC.bit.CSFB = 1;
-	}
-	else {
-		EPwm2Regs.AQCSFRC.bit.CSFB = 2;
-	}
+		if (EPwm2Regs.TBCTR < CMPA) { // ... same principle for PWM2 ...
+			EPwm2Regs.AQCSFRC.bit.CSFA = 1;
+		}
+		else {
+			EPwm2Regs.AQCSFRC.bit.CSFA = 2;
+		}
+		if (EPwm2Regs.TBCTR > CMPB) {
+			EPwm2Regs.AQCSFRC.bit.CSFB = 1;
+		}
+		else {
+			EPwm2Regs.AQCSFRC.bit.CSFB = 2;
+		}
 
-	if (EPwm3Regs.TBCTR < CMPA) { // ... and PWM3
-		EPwm3Regs.AQCSFRC.bit.CSFA = 1;
+		if (EPwm3Regs.TBCTR < CMPA) { // ... and PWM3
+			EPwm3Regs.AQCSFRC.bit.CSFA = 1;
+		}
+		else {
+			EPwm3Regs.AQCSFRC.bit.CSFA = 2;
+		}
+		if (EPwm3Regs.TBCTR > CMPB) {
+			EPwm3Regs.AQCSFRC.bit.CSFB = 1;
+		}
+		else {
+			EPwm3Regs.AQCSFRC.bit.CSFB = 2;
+		}
 	}
-	else {
-		EPwm3Regs.AQCSFRC.bit.CSFA = 2;
-	}
-	if (EPwm3Regs.TBCTR > CMPB) {
-		EPwm3Regs.AQCSFRC.bit.CSFB = 1;
-	}
-	else {
-		EPwm3Regs.AQCSFRC.bit.CSFB = 2;
-	}
+	/*else {
+		EPwm1Regs.AQCSFRC.bit.CSFB = 1; //EPWM1B = OFF
+		EPwm2Regs.AQCSFRC.bit.CSFB = 1; //EPWM2B = OFF
+		EPwm3Regs.AQCSFRC.bit.CSFB = 1; //EPWM3B = OFF
+	}*/
 
 	/*CMPB1 = EPwm1Regs.CMPB;
 	CMPB2 = EPwm2Regs.CMPB;
@@ -183,7 +207,8 @@ void interrupt PER_int(void)
 
 	eCAP_period = CAP_period(); //eCAP period in seconds
 	eCAP_period = ((1/eCAP_period)*SAMPLES); //calculation of PWM4 frequency
-	if ((eCAP_period > (12000)) && (eCAP_period < (240000))) { //if PH1 frequency is in range 310Hz-1000Hz
+	//asm(" ESTOP0");
+	if ((eCAP_period > (13000)) && (eCAP_period < (240000))) { //if PH1 frequency is in range 310Hz-1000Hz
 		valid_signal = 1;
 	}
 	else {
@@ -209,11 +234,14 @@ void interrupt PER_int(void)
 		P = current_error; //proportional term: current error
 		I += previous_error; //integral term: sum of previous errors
 		PI_out = Kp*P + Ki*I; //PI regulator output frequency
-		if (PI_out > 8000) PI_out = 8000; //upper limit of PI output
-		if (PI_out < -8000) PI_out = -8000; //lower limit of PI output
-		PWM_frequency(eCAP_period+PI_out); //PWM4 frequency = 40x phase frequency (PWM123)
+		if (PI_out > 16000) PI_out = 16000; //upper limit of PI output
+		if (PI_out < -16000) PI_out = -16000; //lower limit of PI output
+		PWM_frequency(eCAP_period+PI_out); //PWM4 frequency = 80x phase frequency (PWM123)
+		//PWM_frequency(62400+PI_out);
+		//PWM_duty(adc_pot1);
 		PWM_duty(adc_pot1);
-		PWM_phase(adc_pot2);
+		//PWM_phase(adc_pot2);
+		PWM_phase(0.5);
 	}
 
 	/*****************************************************************
@@ -225,16 +253,18 @@ void interrupt PER_int(void)
 		}
 		else {
 			synchronization = 1;
+			GPIO_Set(GPIO_LED_G);
 		}
 	}
 	else { //if current phase shift is higher than treshold, sync is lost or not reached yet
 		synchronization = 0;
 		samples_counter = 0;
+		GPIO_Clear(GPIO_LED_G);
 	}
 
-	if (synchronization == 1) { //if synchronization successful
+	/*if (synchronization == 1) { //if synchronization successful
 		//asm(" ESTOP0");
-	}
+	}*/
 
 
 
@@ -245,11 +275,11 @@ void interrupt PER_int(void)
 	}
 
     // save values in buffer
-	pwm_timer1 = EPwm1Regs.TBCTR;
-	pwm_timer2 = EPwm2Regs.TBCTR;
-	pwm_timer3 = EPwm3Regs.TBCTR;
+	//pwm_timer1 = EPwm1Regs.TBCTR;
+	//pwm_timer2 = EPwm2Regs.TBCTR;
+	//pwm_timer3 = EPwm3Regs.TBCTR;
 
-    DLOG_GEN_update();
+    //DLOG_GEN_update();
 
     /* check for interrupt while this interrupt is running -
      * if true, there is something wrong - if we count 10 such

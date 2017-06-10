@@ -296,7 +296,7 @@ void PWM_start(void)
 **************************************************************/
 
 void PWM_forceLOW(void) {
-	DINT; //disable interrupts
+	//DINT; //disable interrupts
 	EPwm1Regs.AQCSFRC.bit.CSFA = 1; //PWM 1, output A = LOW
 	EPwm1Regs.AQCSFRC.bit.CSFB = 1; //PWM 1, output B = LOW
 	EPwm2Regs.AQCSFRC.bit.CSFA = 1; //PWM 2, output A = LOW
@@ -311,7 +311,7 @@ void PWM_forceLOW(void) {
 	}
 	GPIO_Clear(GPIO_LED_R); //turn OFF RED LED
 	GPIO_Clear(GPIO_LED_G); //turn OFF GREEN LED
-	EINT; //enable interrupts
+	//EINT; //enable interrupts
 }
 
 
