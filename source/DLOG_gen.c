@@ -8,7 +8,7 @@
 * CHANGES : 
 * VERSION   DATE        WHO         DETAIL 
 * 1.0       16.1.2009   Mitja Nemec Initial version
-* 1.1       23.2.2010   Mitja Nemec Added various trigger modes
+* 1.1       22.2.2010   Mitja Nemec Added various trigger modes
 *
 ****************************************************************/
 #include "DLOG_gen.h"
